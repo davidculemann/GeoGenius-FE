@@ -1,26 +1,52 @@
 import Button from "../shared/Button";
 import styled from "styled-components";
+import { useState } from "react";
+import { appRoot } from "../../App";
+import AuthModal from "./AuthModal";
+import ReactDOM from "react-dom";
 
 const NavContainer = styled.nav`
 	display: flex;
-	padding: 0.8rem 1.6rem;
+	padding: 0 1.6rem;
 	align-items: center;
 	justify-content: space-between;
+	.logo {
+		display: flex;
+		letter-spacing: 0.1rem;
+		i {
+			font-size: 2.8rem;
+			margin-top: 2.5rem;
+		}
+	}
 	.auth-section {
 		display: flex;
 		gap: 0.8rem;
-		align-self: flex-end;
 	}
 `;
 
 export default function Header() {
+	const [authMode, setAuthMode] = useState<string | null>(null);
+
 	return (
 		<NavContainer className="header">
-			<div className="nav-section"></div>
+			<h1 className="logo">
+				Ge
+				<i className="fa-solid fa-earth-americas" />
+				Genius
+			</h1>
 			<div className="auth-section">
-				<Button label="Login" />
-				<Button label="Registration" color={"green"} />
+				<Button label="Login" onClick={() => setAuthMode("Log in")} />
+				<Button
+					label="Registration"
+					color={"var(--secondary-green)"}
+					onClick={() => setAuthMode("Sign up")}
+				/>
 			</div>
+			{authMode &&
+				ReactDOM.createPortal(
+					<AuthModal authMode={authMode} setAuthMode={setAuthMode} />,
+					appRoot as HTMLElement
+				)}
 		</NavContainer>
 	);
 }
