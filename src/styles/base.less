@@ -1,0 +1,33 @@
+:root {
+	// colors
+	--wf-base-900: #1a202c;
+	--wf-base-800: #2d3648;
+	--wf-base-600: #717d96;
+	--wf-base-500: #a0abc0;
+	--wf-base-400: #cbd2e0;
+	--wf-base-200: #edf0f7;
+	--wf-base-white: #ffffff;
+
+	// breakpoints
+	--min-mobile-size: 320px;
+	--min-tablet-size: 481px;
+	--min-laptop-size: 769px;
+	--min-desktop-size: 1025px;
+	--min-tv-size: 1201px;
+
+	// landing page
+	--landing-page-max-width: 140rem;
+	--landing-page-side-padding: 4rem;
+
+	@media (min-width: 769px) {
+		--landing-page-side-padding: 8rem;
+	}
+}
+
+input:is([type="text"], [type="email"], [type="password"]) {
+	background-color: var(--wf-base-white);
+	color: var(--wf-base-800);
+	border-width: 1px;
+	border-radius: 4px;
+	padding: 0.25rem 0.5rem;
+}
