@@ -2,8 +2,6 @@
 	line-height: 1.5;
 	font-weight: 400;
 	color-scheme: light dark;
-	color: #242424;
-	background-color: #fff;
 	font-synthesis: none;
 	text-rendering: optimizeLegibility;
 	-webkit-font-smoothing: antialiased;
@@ -11,6 +9,7 @@
 	-webkit-text-size-adjust: 100%;
 	font-size: 10px;
 	font-family: Poppins, sans-serif;
+	color: #fff;
 }
 
 /* CSS Reset */
@@ -27,6 +26,8 @@
 
 body {
 	min-height: 100vh;
+	overscroll-behavior: none;
+	font-size: 16px;
 }
 
 img,
@@ -45,6 +46,10 @@ select {
 	all: revert;
 }
 
+h1 {
+	font-size: 4.8rem;
+}
+
 button {
 	border: none;
 	background-color: transparent;
@@ -55,10 +60,6 @@ button {
 }
 
 @media (prefers-color-scheme: light) {
-	:root {
-		color: #213547;
-		background-color: #ffffff;
-	}
 	a:hover {
 		color: #747bff;
 	}
@@ -72,6 +73,17 @@ button {
 	text-align: center;
 	width: 100vw;
 	height: 100vh;
+	background: #3e5151; /* fallback for old browsers */
+	background: -webkit-linear-gradient(
+		to bottom,
+		#3e5151,
+		#decba4
+	); /* Chrome 10-25, Safari 5.1-6 */
+	background: linear-gradient(
+		to bottom,
+		#3e5151,
+		#decba4
+	); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
 .App {

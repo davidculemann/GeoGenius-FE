@@ -8,7 +8,7 @@ const StyledButton = styled.button<ButtonProps>`
 	align-items: center;
 	height: 3.2rem;
 	padding: 0 1.2rem;
-	color: ${(props) => (props.color ? "#fff" : "#000")};
+	color: ${(props) => (props.color ? "#000" : "#fff")};
 	font-weight: 600;
 	font-size: 1.4rem;
 	i {
