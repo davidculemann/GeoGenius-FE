@@ -4,6 +4,7 @@ import { useState } from "react";
 import { appRoot } from "../../App";
 import AuthModal from "./AuthModal";
 import ReactDOM from "react-dom";
+import { Link } from "react-router-dom";
 
 const NavContainer = styled.nav`
 	display: flex;
@@ -29,11 +30,13 @@ export default function Header() {
 
 	return (
 		<NavContainer className="header">
-			<h1 className="logo">
-				Ge
-				<i className="fa-solid fa-earth-americas" />
-				Genius
-			</h1>
+			<Link to="/">
+				<h1 className="logo">
+					Ge
+					<i className="fa-solid fa-earth-americas" />
+					Genius
+				</h1>
+			</Link>
 			<div className="auth-section">
 				<Button label="Login" onClick={() => setAuthMode("Log in")} />
 				<Button
