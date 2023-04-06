@@ -1,5 +1,4 @@
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-
 import Button from "../shared/Button";
 import { ClickAwayListener } from "@mui/base";
 import { FormControl } from "@mui/material";
@@ -10,7 +9,6 @@ import InputLabel from "@mui/material/InputLabel";
 import { keyframes } from "styled-components";
 import styled from "styled-components";
 import { useState } from "react";
-import zIndex from "@mui/material/styles/zIndex";
 
 //animation for modal changing backdrop-filter from 0 to 1rem
 const blurIn = keyframes`

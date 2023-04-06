@@ -1,10 +1,22 @@
 import DeletingText from "./DeletingText";
 import styled from "styled-components";
+import GameSetup from "./GameSetup/GameSetup";
 
 const StyledLanding = styled.div`
 	display: flex;
 	flex-direction: column;
-	padding: 0 1.6rem;
+	height: 100%;
+	width: 100%;
+	gap: 1.6rem;
+	.landing-content__container {
+		height: 100%;
+		display: grid;
+		grid-template-columns: 1fr min-content;
+		gap: 1.6rem;
+		@media (max-width: var(--min-laptop-size)) {
+			grid-template-columns: 1fr;
+		}
+	}
 `;
 
 function Landing() {
@@ -13,6 +25,10 @@ function Landing() {
 			<DeletingText
 				textOptions={["land area", "GDP", "literacy", "population"]}
 			/>
+			<div className="landing-content__container">
+				<GameSetup />
+				{/* LeaderBoard component here */}
+			</div>
 		</StyledLanding>
 	);
 }
