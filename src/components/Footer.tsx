@@ -41,7 +41,7 @@ function Footer() {
 					target="_blank"
 					rel="noreferrer"
 				>
-					Github
+					GitHub
 				</a>
 				<i className="fa-brands fa-github"></i>
 			</span>

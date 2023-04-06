@@ -9,8 +9,8 @@ import InputLabel from "@mui/material/InputLabel";
 import { keyframes } from "styled-components";
 import styled from "styled-components";
 import { useState } from "react";
+import { firebaseLogin, firebaseSignup } from "../../logic/actions";
 
-//animation for modal changing backdrop-filter from 0 to 1rem
 const blurIn = keyframes`
 	from {
 		backdrop-filter: blur(0);
@@ -74,6 +74,29 @@ interface AuthProps {
 function AuthModal({ authMode, setAuthMode }: AuthProps) {
 	const [showPassword, setShowPassword] = useState(false);
 	const handleClickShowPassword = () => setShowPassword((show) => !show);
+	const [password, setPassword] = useState("");
+	const [email, setEmail] = useState("");
+	const [username, setUsername] = useState("");
+	const [error, setError] = useState("");
+
+	const handleSignup = async () => {
+		const res = await firebaseSignup({
+			email,
+			password,
+			username,
+		});
+		if ("code" in res) {
+			console.error(`Error ${res.code}: ${res.message}`);
+			setError(res.message);
+		} else {
+			console.log("Signup successful!");
+			setAuthMode("");
+		}
+	};
+
+	const handleLogin = () => {
+		firebaseLogin({ email, password });
+	};
 
 	return (
 		<StyledModal
@@ -97,6 +120,10 @@ function AuthModal({ authMode, setAuthMode }: AuthProps) {
 									autoFocus={true}
 									autoComplete={"username"}
 									required={true}
+									value={username}
+									onChange={(e) =>
+										setUsername(e.target.value)
+									}
 									//color="error"
 								/>
 							</FormControl>
@@ -114,6 +141,8 @@ function AuthModal({ authMode, setAuthMode }: AuthProps) {
 								type="email"
 								autoFocus={authMode === "Log in"}
 								required={true}
+								value={email}
+								onChange={(e) => setEmail(e.target.value)}
 								//color="error"
 							/>
 						</FormControl>
@@ -130,6 +159,8 @@ function AuthModal({ authMode, setAuthMode }: AuthProps) {
 								type={showPassword ? "text" : "password"}
 								required={true}
 								size="medium"
+								value={password}
+								onChange={(e) => setPassword(e.target.value)}
 								endAdornment={
 									<InputAdornment position="end">
 										<IconButton
@@ -151,7 +182,17 @@ function AuthModal({ authMode, setAuthMode }: AuthProps) {
 						<Button
 							color={"var(--secondary-green)"}
 							label={authMode}
+							onClick={
+								authMode === "Log in"
+									? () => {
+											handleLogin();
+									  }
+									: () => {
+											handleSignup();
+									  }
+							}
 						/>
+						{error && "error: " + error}
 						{authMode === "Sign in" && (
 							<Button
 								color={"var(--secondary-green)"}

@@ -42,7 +42,7 @@ export default ({
 		setTimeout(() => {
 			let timeout: number;
 			if (!typeInterval) {
-				typeInterval = setInterval(() => {
+				typeInterval = window.setInterval(() => {
 					/* BUILD / DESTROY TEXT */
 					setVisibleText((prevVisibleText) => {
 						/* SELECT MODE */
@@ -67,7 +67,7 @@ export default ({
 							}
 
 							if (!timeout && mode === "wait") {
-								timeout = setTimeout(() => {
+								timeout = window.setTimeout(() => {
 									mode = "destroy";
 
 									clearTimeout(timeout);
@@ -94,7 +94,7 @@ export default ({
 		}, initialWait);
 
 		// blinking mouse and change color
-		blinkInterval = setInterval(() => {
+		blinkInterval = window.setInterval(() => {
 			setCursorBlink((prevCursorBlink) => !prevCursorBlink);
 		}, 500);
 
