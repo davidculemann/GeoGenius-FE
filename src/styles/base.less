@@ -1,14 +1,14 @@
 :root {
 	// colors
-	--wf-base-900: #1a202c;
-	--wf-base-800: #2d3648;
-	--wf-base-600: #717d96;
-	--wf-base-500: #a0abc0;
-	--wf-base-400: #cbd2e0;
-	--wf-base-200: #edf0f7;
-	--wf-base-white: #ffffff;
 	--border-color: #525252bf;
+	--border-color-highlight: #52525250;
+	--light-border-color: #ffffff24;
+	--light-border-color-highlight: #ffffff50;
+	--light-shade: #d9d9d908;
+	--dark-shade: #00000008;
 	--secondary-green: #1db954;
+	--white75: #ffffffbf;
+	--white50: #ffffff80;
 
 	// breakpoints
 	--min-mobile-size: 320px;
@@ -23,6 +23,15 @@
 
 	@media (min-width: 769px) {
 		--landing-page-side-padding: 8rem;
+	}
+}
+
+a {
+	text-decoration: none;
+	color: inherit;
+	&:hover,
+	&:focus {
+		color: inherit;
 	}
 }
 
