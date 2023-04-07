@@ -24,7 +24,7 @@ const StyledFooter = styled.footer`
 function Footer() {
 	return (
 		<StyledFooter>
-			<p>David Culemann @2023</p>
+			<p>@2023 David Culemann</p>
 			<span>
 				<a
 					href="https://www.linkedin.com/in/david-culemann/"

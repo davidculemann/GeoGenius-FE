@@ -23,6 +23,7 @@ type ButtonProps = {
 	onClick?: () => void;
 	icon?: string | undefined;
 	trailing?: boolean | undefined;
+	className?: string;
 };
 
 export default function Button({
@@ -31,9 +32,15 @@ export default function Button({
 	label,
 	icon,
 	trailing,
+	className,
 }: ButtonProps) {
 	return (
-		<StyledButton trailing={trailing} color={color} onClick={onClick}>
+		<StyledButton
+			trailing={trailing}
+			color={color}
+			onClick={onClick}
+			className={className || ""}
+		>
 			{trailing && icon && <i className={icon}></i>}
 			{label}
 			{!trailing && icon && <i className={icon}></i>}

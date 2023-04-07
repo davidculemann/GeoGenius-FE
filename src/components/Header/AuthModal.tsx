@@ -45,6 +45,9 @@ const StyledModal = styled.div`
 		width: 50rem;
 		top: calc(50% - 25rem);
 		background-color: #fff;
+		.auth-button {
+			margin-top: 1.6rem;
+		}
 		.auth-fields {
 			display: flex;
 			flex-direction: column;
@@ -77,7 +80,31 @@ function AuthModal({ authMode, setAuthMode }: AuthProps) {
 	const [password, setPassword] = useState("");
 	const [email, setEmail] = useState("");
 	const [username, setUsername] = useState("");
-	const [error, setError] = useState("");
+	const [passwordError, setPasswordError] = useState("");
+	const [emailError, setEmailError] = useState("");
+	const [usernameError, setUsernameError] = useState("");
+
+	const handleSetError = (error: any) => {
+		switch (error.code) {
+			case "auth/invalid-email":
+				setEmailError(error.message);
+				break;
+			case "auth/weak-password":
+				setPasswordError(error.message);
+				break;
+			case "auth/email-already-in-use":
+				setEmailError(error.message);
+				break;
+			case "auth/user-not-found":
+				setEmailError(error.message);
+				break;
+			case "auth/wrong-password":
+				setPasswordError(error.message);
+				break;
+			default:
+				break;
+		}
+	};
 
 	const handleSignup = async () => {
 		const res = await firebaseSignup({
@@ -87,15 +114,20 @@ function AuthModal({ authMode, setAuthMode }: AuthProps) {
 		});
 		if ("code" in res) {
 			console.error(`Error ${res.code}: ${res.message}`);
-			setError(res.message);
+			handleSetError(res);
 		} else {
-			console.log("Signup successful!");
 			setAuthMode("");
 		}
 	};
 
-	const handleLogin = () => {
-		firebaseLogin({ email, password });
+	const handleLogin = async () => {
+		const res = await firebaseLogin({ email, password });
+		if ("code" in res) {
+			console.error(`Error ${res.code}: ${res.message}`);
+			handleSetError(res);
+		} else {
+			setAuthMode("");
+		}
 	};
 
 	return (
@@ -124,7 +156,7 @@ function AuthModal({ authMode, setAuthMode }: AuthProps) {
 									onChange={(e) =>
 										setUsername(e.target.value)
 									}
-									//color="error"
+									error={!!usernameError}
 								/>
 							</FormControl>
 						)}
@@ -143,7 +175,7 @@ function AuthModal({ authMode, setAuthMode }: AuthProps) {
 								required={true}
 								value={email}
 								onChange={(e) => setEmail(e.target.value)}
-								//color="error"
+								error={!!emailError}
 							/>
 						</FormControl>
 						<FormControl variant="standard">
@@ -158,7 +190,7 @@ function AuthModal({ authMode, setAuthMode }: AuthProps) {
 								autoComplete="current-password webauthn"
 								type={showPassword ? "text" : "password"}
 								required={true}
-								size="medium"
+								error={!!passwordError}
 								value={password}
 								onChange={(e) => setPassword(e.target.value)}
 								endAdornment={
@@ -182,6 +214,7 @@ function AuthModal({ authMode, setAuthMode }: AuthProps) {
 						<Button
 							color={"var(--secondary-green)"}
 							label={authMode}
+							className="auth-button"
 							onClick={
 								authMode === "Log in"
 									? () => {
@@ -192,8 +225,7 @@ function AuthModal({ authMode, setAuthMode }: AuthProps) {
 									  }
 							}
 						/>
-						{error && "error: " + error}
-						{authMode === "Sign in" && (
+						{authMode === "Log in" && (
 							<Button
 								color={"var(--secondary-green)"}
 								label="Forgot password?"

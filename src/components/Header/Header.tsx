@@ -1,10 +1,13 @@
 import Button from "../shared/Button";
 import styled from "styled-components";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { appRoot } from "../../App";
 import AuthModal from "./AuthModal";
 import ReactDOM from "react-dom";
 import { Link } from "react-router-dom";
+import { auth } from "../../firebase";
+import IconButton from "../shared/IconButton";
+import { useAppDispatch, useAppSelector } from "../../logic/hooks";
 
 const NavContainer = styled.nav`
 	display: flex;
@@ -26,6 +29,24 @@ const NavContainer = styled.nav`
 
 export default function Header() {
 	const [authMode, setAuthMode] = useState<string | null>(null);
+	const currentUser = useAppSelector((state) => state.currentUser);
+	const dispatch = useAppDispatch();
+
+	useEffect(() => {
+		const unsubscribe = auth.onAuthStateChanged((user) => {
+			dispatch({
+				type: "SET_CURRENT_USER",
+				payload: user
+					? { displayName: user.displayName, email: user.email }
+					: null,
+			});
+		});
+		return () => {
+			unsubscribe();
+		};
+	}, []);
+
+	console.log("current user", currentUser);
 
 	return (
 		<NavContainer className="header">
@@ -37,12 +58,35 @@ export default function Header() {
 				</h1>
 			</Link>
 			<div className="auth-section">
-				<Button label="Login" onClick={() => setAuthMode("Log in")} />
-				<Button
-					label="Registration"
-					color={"var(--secondary-green)"}
-					onClick={() => setAuthMode("Sign up")}
-				/>
+				{currentUser ? (
+					<>
+						<IconButton
+							icon="fa-solid fa-sign-out-alt"
+							onClick={() => {
+								auth.signOut();
+								dispatch({
+									type: "SET_CURRENT_USER",
+									payload: null,
+								});
+							}}
+						/>
+						<div className="current-user">
+							{currentUser.displayName}
+						</div>
+					</>
+				) : (
+					<>
+						<Button
+							label="Login"
+							onClick={() => setAuthMode("Log in")}
+						/>
+						<Button
+							label="Registration"
+							color={"var(--secondary-green)"}
+							onClick={() => setAuthMode("Sign up")}
+						/>
+					</>
+				)}
 			</div>
 			{authMode &&
 				ReactDOM.createPortal(
