@@ -24,6 +24,7 @@ const NavContainer = styled.nav`
 	.auth-section {
 		display: flex;
 		gap: 0.8rem;
+		align-items: center;
 	}
 `;
 
@@ -46,8 +47,6 @@ export default function Header() {
 		};
 	}, []);
 
-	console.log("current user", currentUser);
-
 	return (
 		<NavContainer className="header">
 			<Link to="/">
@@ -60,6 +59,9 @@ export default function Header() {
 			<div className="auth-section">
 				{currentUser ? (
 					<>
+						<div className="current-user">
+							{currentUser.displayName}
+						</div>
 						<IconButton
 							icon="fa-solid fa-sign-out-alt"
 							onClick={() => {
@@ -70,9 +72,6 @@ export default function Header() {
 								});
 							}}
 						/>
-						<div className="current-user">
-							{currentUser.displayName}
-						</div>
 					</>
 				) : (
 					<>
