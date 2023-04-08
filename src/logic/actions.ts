@@ -67,3 +67,12 @@ export async function firebaseLogin({ email, password }: AuthProps) {
 		return errorProps;
 	}
 }
+
+interface CountryData {
+	country: string;
+}
+
+export async function getCountryData({ mode }: { mode: string }) {
+	const response = await axios.get(`${API_URL}/statistics/${mode}`);
+	return response.data;
+}
