@@ -71,6 +71,7 @@ export default function Header() {
 									payload: null,
 								});
 							}}
+							tooltip="Sign out"
 						/>
 					</>
 				) : (

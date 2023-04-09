@@ -54,12 +54,12 @@ function CountryContainer({
 			<div className="image-container">
 				<img
 					src={`${process.env.PUBLIC_URL}/src/assets/images/countries/${countryCode}/vector.svg`}
-					alt=""
+					alt={`Map image of ${countryCode}`}
 				/>
 			</div>
 			<div className="country-info-container">
 				<div className="country-name">
-					{getCountryName(countryCode)} {getFlagEmoji(countryCode)}
+					{getFlagEmoji(countryCode)} {getCountryName(countryCode)}
 				</div>
 				<div className="metric-container">
 					{capitaliseModeName(metricName)}{" "}
