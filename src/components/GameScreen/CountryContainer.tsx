@@ -53,7 +53,7 @@ function CountryContainer({
 		<StyledCountryContainer>
 			<div className="image-container">
 				<img
-					src={`/assets/images/countries/${countryCode}/vector.svg`}
+					src={`/public/assets/images/countries/${countryCode}/vector.svg`}
 					alt={`Map image of ${countryCode}`}
 				/>
 			</div>
