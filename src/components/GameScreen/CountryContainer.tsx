@@ -53,7 +53,9 @@ function CountryContainer({
 		<StyledCountryContainer>
 			<div className="image-container">
 				<img
-					src={`${process.env.PUBLIC_URL}/src/assets/images/countries/${countryCode}/vector.svg`}
+					src={`${
+						import.meta.env.BASE_URL
+					}src/assets/images/countries/${countryCode}/vector.svg`}
 					alt={`Map image of ${countryCode}`}
 				/>
 			</div>
