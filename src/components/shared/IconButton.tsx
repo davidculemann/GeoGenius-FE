@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import StyledTooltip from "./StyledTooltip";
 
 const StyledIconButton = styled.button`
 	display: flex;
@@ -17,13 +18,16 @@ const StyledIconButton = styled.button`
 interface IconButtonProps {
 	icon: string;
 	onClick: () => void;
+	tooltip?: string;
 }
 
-function IconButton({ icon, onClick }: IconButtonProps) {
+function IconButton({ icon, onClick, tooltip }: IconButtonProps) {
 	return (
-		<StyledIconButton onClick={onClick}>
-			<i className={icon} />
-		</StyledIconButton>
+		<StyledTooltip arrow title={tooltip || ""}>
+			<StyledIconButton onClick={onClick}>
+				<i className={icon} />
+			</StyledIconButton>
+		</StyledTooltip>
 	);
 }
 

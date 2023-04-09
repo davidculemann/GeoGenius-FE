@@ -46,6 +46,11 @@ function GameScreen() {
 		}
 	};
 
+	const handleRestart = () => {
+		setScore(0);
+		if (mode) getCountryData({ mode }).then((res) => setCountryData(res));
+	};
+
 	useEffect(() => {
 		if (mode) getCountryData({ mode }).then((res) => setCountryData(res));
 	}, []);
@@ -58,6 +63,11 @@ function GameScreen() {
 					<IconButton
 						icon="fa-solid fa-home"
 						onClick={() => navigate("/")}
+					/>
+					<IconButton
+						icon="fa-solid fa-undo"
+						onClick={() => handleRestart()}
+						tooltip="Restart"
 					/>
 					<StyledTooltip
 						arrow
@@ -86,18 +96,22 @@ function GameScreen() {
 						/>
 					</div>
 					<div className="voting-controls">
-						<IconButton
-							icon="fa-solid fa-circle-chevron-up"
+						<button
+							className="vote-button"
 							onClick={() => {
 								handleVote(true);
 							}}
-						/>
-						<IconButton
-							icon="fa-solid fa-circle-chevron-down"
+						>
+							<i className="fa-solid fa-circle-chevron-up" />
+						</button>
+						<button
+							className="vote-button"
 							onClick={() => {
 								handleVote(false);
 							}}
-						/>
+						>
+							<i className="fa-solid fa-circle-chevron-down" />
+						</button>
 					</div>
 					<div className="right-country">
 						<CountryContainer
