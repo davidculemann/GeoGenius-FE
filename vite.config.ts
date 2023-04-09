@@ -4,5 +4,8 @@ import react from "@vitejs/plugin-react";
 // https://vitejs.dev/config/
 export default defineConfig({
 	plugins: [react()],
-	base: "https://geogenius.vercel.app/",
+	base:
+		process.env.NODE_ENV === "production"
+			? "https://geogenius.vercel.app/dist/"
+			: "/",
 });
