@@ -1,0 +1,69 @@
+.game-screen {
+	display: flex;
+	flex-direction: column;
+	.game-header-bar {
+		display: flex;
+		border-bottom: 1px solid var(--light-border-color);
+		align-items: baseline;
+		i {
+			display: flex;
+			align-items: center;
+		}
+		> * {
+			width: 0;
+			flex-grow: 1;
+			display: flex;
+		}
+		.game-header__left {
+			justify-content: flex-start;
+			gap: 0.8rem;
+		}
+		.score-tracker {
+			display: flex;
+			justify-content: center;
+			.score-number {
+				position: relative;
+				font-size: 5.6rem;
+				line-height: 5.6rem;
+				font-weight: 400;
+				&::before {
+					content: "score ";
+					font-size: 1.6rem;
+					line-height: 1.6rem;
+					margin-right: 0.8rem;
+					position: absolute;
+					right: 100%;
+					bottom: 0.8rem;
+				}
+			}
+		}
+		.game-header__right {
+			justify-content: flex-end;
+			gap: 0.8rem;
+			.category-icon__container {
+				display: flex;
+				gap: 0.8rem;
+				align-items: center;
+			}
+		}
+	}
+	.voting-controls {
+		display: flex;
+		flex-direction: column;
+		gap: 0.8rem;
+		align-items: center;
+		justify-content: center;
+		i {
+			font-size: 2.8rem;
+		}
+	}
+	.country-container {
+		display: grid;
+		grid-template-columns: 1fr 12rem 1fr;
+		@media (max-width: var(--min-laptop-size)) {
+			grid-template-columns: 1fr;
+		}
+		gap: 1.6rem;
+		padding: 0 3.2rem;
+	}
+}
