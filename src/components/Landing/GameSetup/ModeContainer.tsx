@@ -107,7 +107,7 @@ function ModeContainer({ mode, setCustomiseMode, customiseMode }: ModeProps) {
 		<StyledModeContainer
 			role="button"
 			aria-label={`game-mode button ${name}`}
-			onClick={() => navigate(`/play/${name}`)}
+			onClick={() => navigate(`/play/${name.toLowerCase()}`)}
 		>
 			<div className="game-mode__icon">
 				<i className={`fas ${icon}`}></i>
