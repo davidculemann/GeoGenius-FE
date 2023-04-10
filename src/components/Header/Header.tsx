@@ -52,7 +52,7 @@ export default function Header() {
 				getUserScores(user.uid).then((res) => {
 					dispatch(setUserScores(res));
 				});
-			else dispatch(setUserScores({}));
+			else dispatch(setUserScores(null));
 		});
 		return () => {
 			unsubscribe();
@@ -89,12 +89,13 @@ export default function Header() {
 				) : (
 					<>
 						<Button
-							label="Login"
+							label="Log in"
 							onClick={() => setAuthMode("Log in")}
+							variant="secondary"
 						/>
 						<Button
-							label="Registration"
-							color={"var(--secondary-green)"}
+							label="Register"
+							variant="primary"
 							onClick={() => setAuthMode("Sign up")}
 						/>
 					</>

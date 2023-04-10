@@ -2,23 +2,31 @@ import styled from "styled-components";
 
 const StyledButton = styled.button<ButtonProps>`
 	border-radius: 1.8rem;
-	background-color: ${(props) => props.color || "transparent"};
+	background-color: ${(props) =>
+		props.variant === "primary" ? "var(--secondary-green)" : "transparent"};
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	height: 3.2rem;
 	padding: 0 1.2rem;
-	color: ${(props) => (props.color ? "#000" : "#fff")};
+	color: ${(props) => (props.variant === "primary" ? "#000" : "#fff")};
 	font-weight: 600;
 	font-size: 1.4rem;
+	transition: background-color 0.1s linear;
 	i {
 		margin: ${(props) =>
 			props.trailing ? "0 0.8rem 0 0" : "0 0 0 0.8rem"};
 	}
+	&:hover {
+		background-color: ${(props) =>
+			props.variant === "primary"
+				? "var(--secondary-green-hover)"
+				: "var(--dark-shade-2)"};
+	}
 `;
 
 type ButtonProps = {
-	color?: string;
+	variant?: string;
 	label?: string;
 	onClick?: () => void;
 	icon?: string | undefined;
@@ -27,8 +35,8 @@ type ButtonProps = {
 };
 
 export default function Button({
-	color,
 	onClick,
+	variant,
 	label,
 	icon,
 	trailing,
@@ -37,7 +45,7 @@ export default function Button({
 	return (
 		<StyledButton
 			trailing={trailing}
-			color={color}
+			variant={variant}
 			onClick={onClick}
 			className={className || ""}
 		>

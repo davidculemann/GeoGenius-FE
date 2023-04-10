@@ -106,7 +106,7 @@ function GameScreen() {
 				</div>
 				<div className="score-tracker">
 					<StyledTooltip
-						open={score > modeHighScore}
+						open={userScores && score > modeHighScore}
 						title={
 							score > modeHighScore ? "New High Score! 🎉" : ""
 						}

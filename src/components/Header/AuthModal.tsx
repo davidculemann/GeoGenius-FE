@@ -212,7 +212,7 @@ function AuthModal({ authMode, setAuthMode }: AuthProps) {
 							/>
 						</FormControl>
 						<Button
-							color={"var(--secondary-green)"}
+							variant="primary"
 							label={authMode}
 							className="auth-button"
 							onClick={
@@ -227,7 +227,7 @@ function AuthModal({ authMode, setAuthMode }: AuthProps) {
 						/>
 						{authMode === "Log in" && (
 							<Button
-								color={"var(--secondary-green)"}
+								variant="primary"
 								label="Forgot password?"
 							/>
 						)}
