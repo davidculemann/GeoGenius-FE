@@ -1,5 +1,9 @@
 import axios from "axios";
-import { User, signInWithEmailAndPassword } from "firebase/auth";
+import {
+	User,
+	signInWithEmailAndPassword,
+	sendPasswordResetEmail,
+} from "firebase/auth";
 import { auth } from "../firebase";
 
 const FIREBASE_URL =
@@ -70,7 +74,6 @@ export async function firebaseLogin({ email, password }: AuthProps) {
 
 export async function getCountryData(mode: string) {
 	const response = await axios.get(`${API_URL}/statistics/${mode}`);
-	console.log(response.data);
 	return response.data;
 }
 
@@ -116,4 +119,9 @@ export async function getUserScores(uid: string) {
 		},
 	});
 	return response.data;
+}
+
+export async function passwordResetEmail(email: string) {
+	const response = sendPasswordResetEmail(auth, email);
+	return response;
 }

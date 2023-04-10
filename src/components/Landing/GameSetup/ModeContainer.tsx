@@ -15,14 +15,15 @@ const StyledModeContainer = styled.div`
 	cursor: pointer;
 	.game-mode__icon {
 		flex-shrink: 0;
-		height: 7.2rem;
-		width: 7.2rem;
+		height: 6rem;
+		width: 6rem;
 		border-radius: 50%;
-		border: 0.2rem solid var(--white75);
+		border: 0.1rem solid var(--white75);
 		font-size: 2.4rem;
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		background-color: var(--dark-shade);
 	}
 	.game-mode__info {
 		.name-container {

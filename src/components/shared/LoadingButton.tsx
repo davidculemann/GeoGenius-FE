@@ -1,3 +1,6 @@
+import lottie from "lottie-web";
+import { useEffect, useRef, useState } from "react";
+
 import styled from "styled-components";
 
 const StyledButton = styled.button<ButtonProps>`
@@ -32,26 +35,55 @@ type ButtonProps = {
 	icon?: string | undefined;
 	trailing?: boolean | undefined;
 	className?: string;
+	loading?: boolean;
 };
 
-export default function Button({
+export default function LoadingButton({
 	onClick,
 	variant,
 	label,
 	icon,
 	trailing,
 	className,
+	loading,
 }: ButtonProps) {
+	const buttonRef = useRef<HTMLButtonElement>(null);
+	const animationRef = useRef<lottie.AnimationItem | null>(null);
+	const [contentVisible, setContentVisible] = useState(true);
+
+	useEffect(() => {
+		if (loading) {
+			setContentVisible(false);
+			animationRef.current = lottie.loadAnimation({
+				container: buttonRef.current as Element,
+				renderer: "svg",
+				loop: true,
+				autoplay: true,
+				path: "/animations/loading-animation.json",
+			});
+		} else if (animationRef.current) {
+			animationRef.current?.destroy();
+			setContentVisible(true);
+		}
+		return () => animationRef.current?.destroy();
+	}, [loading]);
+
 	return (
 		<StyledButton
+			ref={buttonRef}
 			trailing={trailing}
 			variant={variant}
 			onClick={onClick}
 			className={className || ""}
+			disabled={loading}
 		>
-			{trailing && icon && <i className={icon}></i>}
-			{label}
-			{!trailing && icon && <i className={icon}></i>}
+			{contentVisible && (
+				<div>
+					{trailing && icon && <i className={icon}></i>}
+					{label}
+					{!trailing && icon && <i className={icon}></i>}
+				</div>
+			)}
 		</StyledButton>
 	);
 }

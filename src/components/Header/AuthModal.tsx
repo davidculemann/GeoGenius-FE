@@ -9,7 +9,12 @@ import InputLabel from "@mui/material/InputLabel";
 import { keyframes } from "styled-components";
 import styled from "styled-components";
 import { useState } from "react";
-import { firebaseLogin, firebaseSignup } from "../../logic/actions";
+import {
+	firebaseLogin,
+	firebaseSignup,
+	passwordResetEmail,
+} from "../../logic/actions";
+import LoadingButton from "../shared/LoadingButton";
 
 const blurIn = keyframes`
 	from {
@@ -53,9 +58,18 @@ const StyledModal = styled.div`
 			flex-direction: column;
 			gap: 2.4rem;
 			width: 60%;
+			.forgot-password {
+				font-size: 1.4rem;
+				opacity: 0.75;
+				transition: opacity 0.1s linear;
+			}
+		}
+		.reset-password-message {
+			font-size: 1.4rem;
+			opacity: 0.75;
 		}
 		.alternative-action {
-			font-size: 1rem;
+			font-size: 1.4rem;
 			opacity: 0.75;
 			margin-top: auto;
 			button {
@@ -83,23 +97,34 @@ function AuthModal({ authMode, setAuthMode }: AuthProps) {
 	const [passwordError, setPasswordError] = useState("");
 	const [emailError, setEmailError] = useState("");
 	const [usernameError, setUsernameError] = useState("");
+	const [authPending, setAuthPending] = useState(false);
 
 	const handleSetError = (error: any) => {
+		console.log(error);
 		switch (error.code) {
-			case "auth/invalid-email":
-				setEmailError(error.message);
+			case "invalid-email":
+				setEmailError(error.message || error.code);
 				break;
 			case "auth/weak-password":
-				setPasswordError(error.message);
+				setPasswordError(error.message || error.code);
 				break;
 			case "auth/email-already-in-use":
-				setEmailError(error.message);
+				setEmailError(error.message || error.code);
+				break;
+			case "auth/email-already-exists":
+				setEmailError(error.message || error.code);
 				break;
 			case "auth/user-not-found":
-				setEmailError(error.message);
+				setEmailError(error.message || error.code);
 				break;
 			case "auth/wrong-password":
-				setPasswordError(error.message);
+				setPasswordError(error.message || error.code);
+				break;
+			case "auth/invalid-username":
+				setUsernameError(error.message || error.code);
+				break;
+			case "username-already-in-use":
+				setUsernameError(error.message || error.code);
 				break;
 			default:
 				break;
@@ -107,20 +132,24 @@ function AuthModal({ authMode, setAuthMode }: AuthProps) {
 	};
 
 	const handleSignup = async () => {
+		setAuthPending(true);
 		const res = await firebaseSignup({
 			email,
 			password,
 			username,
 		});
+		console.log(res);
 		if ("code" in res) {
-			console.error(`Error ${res.code}: ${res.message}`);
+			console.log(`Error ${res.code}: ${res.message}`);
 			handleSetError(res);
 		} else {
 			setAuthMode("");
 		}
+		setAuthPending(false);
 	};
 
 	const handleLogin = async () => {
+		setAuthPending(true);
 		const res = await firebaseLogin({ email, password });
 		if ("code" in res) {
 			console.error(`Error ${res.code}: ${res.message}`);
@@ -128,6 +157,14 @@ function AuthModal({ authMode, setAuthMode }: AuthProps) {
 		} else {
 			setAuthMode("");
 		}
+		setAuthPending(false);
+	};
+
+	const handleSendPasswordResetEmail = async () => {
+		setAuthPending(true);
+		await passwordResetEmail(email);
+		setAuthPending(false);
+		setAuthMode("Log in");
 	};
 
 	return (
@@ -178,58 +215,77 @@ function AuthModal({ authMode, setAuthMode }: AuthProps) {
 								error={!!emailError}
 							/>
 						</FormControl>
-						<FormControl variant="standard">
-							<InputLabel
-								htmlFor="standard-adornment-password"
-								sx={{ zIndex: 2 }}
-							>
-								Password
-							</InputLabel>
-							<Input
-								id="standard-adornment-password"
-								autoComplete="current-password webauthn"
-								type={showPassword ? "text" : "password"}
-								required={true}
-								error={!!passwordError}
-								value={password}
-								onChange={(e) => setPassword(e.target.value)}
-								endAdornment={
-									<InputAdornment position="end">
-										<IconButton
-											aria-label="toggle password visibility"
-											onClick={handleClickShowPassword}
-											edge="end"
-										>
-											{showPassword ? (
-												<VisibilityOff />
-											) : (
-												<Visibility />
-											)}
-										</IconButton>
-									</InputAdornment>
-								}
-								//color="error"
-							/>
-						</FormControl>
-						<Button
-							color={"var(--secondary-green)"}
+						{authMode !== "Reset password" && (
+							<FormControl variant="standard">
+								<InputLabel
+									htmlFor="standard-adornment-password"
+									sx={{ zIndex: 2 }}
+								>
+									Password
+								</InputLabel>
+								<Input
+									id="standard-adornment-password"
+									autoComplete="current-password webauthn"
+									type={showPassword ? "text" : "password"}
+									required={true}
+									error={!!passwordError}
+									value={password}
+									onChange={(e) =>
+										setPassword(e.target.value)
+									}
+									endAdornment={
+										<InputAdornment position="end">
+											<IconButton
+												aria-label="toggle password visibility"
+												onClick={
+													handleClickShowPassword
+												}
+												edge="end"
+											>
+												{showPassword ? (
+													<VisibilityOff />
+												) : (
+													<Visibility />
+												)}
+											</IconButton>
+										</InputAdornment>
+									}
+								/>
+							</FormControl>
+						)}
+						<LoadingButton
+							variant="primary"
 							label={authMode}
 							className="auth-button"
+							loading={authPending}
 							onClick={
 								authMode === "Log in"
 									? () => {
 											handleLogin();
 									  }
-									: () => {
+									: authMode === "Sign up"
+									? () => {
 											handleSignup();
+									  }
+									: () => {
+											handleSendPasswordResetEmail();
 									  }
 							}
 						/>
 						{authMode === "Log in" && (
-							<Button
-								color={"var(--secondary-green)"}
-								label="Forgot password?"
-							/>
+							<button
+								className="forgot-password"
+								onClick={() => {
+									setAuthMode("Reset password");
+								}}
+							>
+								forgot password?
+							</button>
+						)}
+						{authMode === "Reset password" && (
+							<p className="reset-password-message">
+								You will receive an email with a reset link.
+							</p>
 						)}
 					</div>
 					<div className="alternative-action">
@@ -240,9 +296,16 @@ function AuthModal({ authMode, setAuthMode }: AuthProps) {
 									Sign up
 								</button>
 							</>
-						) : (
+						) : authMode === "Log in" ? (
 							<>
 								<span>Already have an account?</span>
+								<button onClick={() => setAuthMode("Log in")}>
+									Log in
+								</button>
+							</>
+						) : (
+							<>
+								<span>Remember your password?</span>
 								<button onClick={() => setAuthMode("Log in")}>
 									Log in
 								</button>
