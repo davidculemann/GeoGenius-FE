@@ -64,6 +64,10 @@ const StyledModal = styled.div`
 				transition: opacity 0.1s linear;
 			}
 		}
+		.reset-password-message {
+			font-size: 1.4rem;
+			opacity: 0.75;
+		}
 		.alternative-action {
 			font-size: 1.4rem;
 			opacity: 0.75;
@@ -278,8 +282,12 @@ function AuthModal({ authMode, setAuthMode }: AuthProps) {
 								forgot password?
 							</button>
 						)}
+						{authMode === "Reset password" && (
+							<p className="reset-password-message">
+								You will receive an email with a reset link.
+							</p>
+						)}
 					</div>
-
 					<div className="alternative-action">
 						{authMode === "Log in" ? (
 							<>
