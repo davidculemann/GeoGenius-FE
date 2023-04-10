@@ -14,6 +14,7 @@ const StyledModeContainer = styled.div`
 	box-shadow: 0px 0px 0.2rem rgba(0, 0, 0, 0.2);
 	cursor: pointer;
 	.game-mode__icon {
+		flex-shrink: 0;
 		height: 7.2rem;
 		width: 7.2rem;
 		border-radius: 50%;

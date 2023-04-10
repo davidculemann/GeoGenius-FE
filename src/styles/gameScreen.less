@@ -8,6 +8,9 @@
 		i {
 			display: flex;
 			align-items: center;
+			&.fa-circle-question {
+				padding: 0 0.8rem;
+			}
 		}
 		> * {
 			width: 0;
@@ -17,6 +20,11 @@
 		.game-header__left {
 			justify-content: flex-start;
 			gap: 0.8rem;
+			.category-icon__container {
+				display: flex;
+				gap: 0.8rem;
+				align-items: center;
+			}
 		}
 		.score-tracker {
 			display: flex;
@@ -40,11 +48,6 @@
 		.game-header__right {
 			justify-content: flex-end;
 			gap: 0.8rem;
-			.category-icon__container {
-				display: flex;
-				gap: 0.8rem;
-				align-items: center;
-			}
 		}
 	}
 	.voting-controls {
