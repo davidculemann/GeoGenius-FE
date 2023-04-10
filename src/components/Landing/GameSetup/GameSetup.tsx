@@ -70,6 +70,10 @@ function GameSetup() {
 					/>
 				))}
 			</div>
+			<img
+				src={`./assets/images/countries/AF/vector.svg`}
+				alt={`Map image of AF`}
+			/>
 		</StyledSetupContainer>
 	);
 }
