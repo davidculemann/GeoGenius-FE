@@ -71,7 +71,7 @@ function GameSetup() {
 				))}
 			</div>
 			<img
-				src={`images/countries/GD/vector.svg`}
+				src={`/images/countries/GD/vector.svg`}
 				alt={`Map image of GD`}
 			/>
 		</StyledSetupContainer>

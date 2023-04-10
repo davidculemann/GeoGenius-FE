@@ -6,7 +6,8 @@
 	"scripts": {
 		"dev": "vite --port 3000",
 		"build": "tsc && vite build",
-		"preview": "vite preview"
+		"preview": "vite preview",
+		"deploy": "yarn build && vercel --prod"
 	},
 	"dependencies": {
 		"@emotion/react": "^11.10.6",
