@@ -9,6 +9,7 @@ import { useAppSelector } from "../../logic/hooks";
 import { capitaliseModeName } from "../../logic/utils";
 import { useAppDispatch } from "../../logic/hooks";
 import { setUserScores } from "../../logic/reducer";
+import EndGameModal from "./EndGameModal";
 import React from "react";
 import lottie from "lottie-web";
 
@@ -39,10 +40,11 @@ function GameScreen() {
 	const [scoreHidden, setScoreHidden] = useState<boolean>(true);
 	const [countryIndices, setcountryIndices] = useState<number[]>([0, 1]);
 	const [loading, setLoading] = useState<boolean>(true);
+	const [showModal, setShowModal] = useState<boolean>(false);
 	const modeHighScore = userScores?.[mode!] || 0;
-
 	const loadingContainerRef = useRef<HTMLDivElement>(null);
 	const animationRef = useRef<lottie.AnimationItem | null>(null);
+	const oldHighScore = useRef(modeHighScore);
 
 	const handleVote = (isHigher: boolean) => {
 		setScoreHidden(false);
@@ -62,12 +64,13 @@ function GameScreen() {
 				setcountryIndices((prev) => [prev[0] + 1, prev[1] + 1]);
 			}, 1250);
 		} else {
-			alert(`You scored ${score} points!`);
+			setShowModal(true);
 			if (currentUser?.uid)
 				postScore({ score, mode: mode!, uid: currentUser.uid }).then(
-					(res) => dispatch(setUserScores(res))
+					(res) => {
+						dispatch(setUserScores(res));
+					}
 				);
-			navigate("/");
 		}
 	};
 
@@ -83,9 +86,11 @@ function GameScreen() {
 	};
 
 	const handleRestart = () => {
+		oldHighScore.current = modeHighScore;
 		setLoading(true);
 		setScore(0);
 		setScoreHidden(true);
+		setShowModal(false);
 		if (mode) handleSetCountryData();
 	};
 
@@ -169,6 +174,7 @@ function GameScreen() {
 					</div>
 					<div className="voting-controls">
 						<button
+							disabled={showModal}
 							className="vote-button"
 							onClick={() => {
 								handleVote(true);
@@ -177,6 +183,7 @@ function GameScreen() {
 							<i className="fa-solid fa-circle-chevron-up" />
 						</button>
 						<button
+							disabled={showModal}
 							className="vote-button"
 							onClick={() => {
 								handleVote(false);
@@ -198,6 +205,14 @@ function GameScreen() {
 				</div>
 			)}
 			<div className="loading-container" ref={loadingContainerRef}></div>
+			{showModal && (
+				<EndGameModal
+					handleRestart={handleRestart}
+					score={score}
+					oldScore={oldHighScore.current || 0}
+					registeredUser={!!currentUser}
+				/>
+			)}
 		</div>
 	);
 }
