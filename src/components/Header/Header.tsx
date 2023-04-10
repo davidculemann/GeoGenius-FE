@@ -8,6 +8,8 @@ import { Link } from "react-router-dom";
 import { auth } from "../../firebase";
 import IconButton from "../shared/IconButton";
 import { useAppDispatch, useAppSelector } from "../../logic/hooks";
+import { getUserScores } from "../../logic/actions";
+import { setCurrentUser, setUserScores } from "../../logic/reducer";
 
 const NavContainer = styled.nav`
 	display: flex;
@@ -35,12 +37,22 @@ export default function Header() {
 
 	useEffect(() => {
 		const unsubscribe = auth.onAuthStateChanged((user) => {
-			dispatch({
-				type: "SET_CURRENT_USER",
-				payload: user
-					? { displayName: user.displayName, email: user.email }
-					: null,
-			});
+			dispatch(
+				setCurrentUser(
+					user
+						? {
+								displayName: user.displayName,
+								email: user.email,
+								uid: user.uid,
+						  }
+						: null
+				)
+			);
+			if (user)
+				getUserScores(user.uid).then((res) => {
+					dispatch(setUserScores(res));
+				});
+			else dispatch(setUserScores({}));
 		});
 		return () => {
 			unsubscribe();

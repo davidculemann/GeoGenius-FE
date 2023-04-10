@@ -5,6 +5,7 @@ import {
 	getCountryName,
 	getFlagEmoji,
 } from "../../logic/utils";
+import AnimatedMetricNumber from "../shared/AnimatedMetricNumber";
 
 interface CountryContainerProps {
 	countryCode: string;
@@ -35,6 +36,9 @@ const StyledCountryContainer = styled.div`
 		gap: 1.6rem;
 		font-size: 1.8rem;
 		.metric-container {
+			display: flex;
+			align-items: baseline;
+			gap: 0.8rem;
 			.metric-number {
 				font-weight: 700;
 				font-size: 2.4rem;
@@ -62,12 +66,22 @@ function CountryContainer({
 					{getFlagEmoji(countryCode)} {getCountryName(countryCode)}
 				</div>
 				<div className="metric-container">
-					{capitaliseModeName(metricName)}{" "}
+					{capitaliseModeName(metricName)}
 					{metricName === "gdp" && !hidden && <span>$ </span>}
 					<span className="metric-number">
-						{hidden
-							? "?"
-							: formatMetricNumber(metricNumber, metricName)}
+						{hidden ? (
+							"?"
+						) : hidden === undefined ? (
+							<span>
+								{formatMetricNumber(metricNumber, metricName)}
+							</span>
+						) : (
+							<AnimatedMetricNumber
+								metricNumber={parseFloat(metricNumber)}
+								duration={1000}
+								type={metricName}
+							/>
+						)}
 					</span>{" "}
 					{metricName === "area" && !hidden && (
 						<span>

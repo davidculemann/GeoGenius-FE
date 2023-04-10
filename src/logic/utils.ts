@@ -18,8 +18,10 @@ export const formatMetricNumber = (
 	metricName: string
 ) => {
 	if (typeof number === "string") number = parseFloat(number);
+	if (metricName === "population" || metricName === "area")
+		return number.toLocaleString("en-US", { maximumFractionDigits: 0 });
 	return number.toLocaleString("en-US", {
 		maximumFractionDigits: 2,
-		minimumFractionDigits: metricName === "population" ? 0 : 2,
+		minimumFractionDigits: 2,
 	});
 };

@@ -68,11 +68,52 @@ export async function firebaseLogin({ email, password }: AuthProps) {
 	}
 }
 
-interface CountryData {
-	country: string;
+export async function getCountryData(mode: string) {
+	const response = await axios.get(`${API_URL}/statistics/${mode}`);
+	console.log(response.data);
+	return response.data;
 }
 
-export async function getCountryData({ mode }: { mode: string }) {
-	const response = await axios.get(`${API_URL}/statistics/${mode}`);
+export async function postScore({
+	mode,
+	score,
+	uid,
+}: {
+	mode: string;
+	score: number;
+	uid: string;
+}) {
+	const response = await axios.post(
+		`${API_URL}/score`,
+		{
+			score,
+			mode,
+			uid,
+		},
+		{
+			headers: {
+				authorization:
+					"Bearer " + (await auth.currentUser?.getIdToken()),
+			},
+		}
+	);
+	return response.data;
+}
+
+export async function getLeaderboard({ mode }: { mode: string }) {
+	const response = await axios.get(`${API_URL}/leaderboard/${mode}`, {
+		headers: {
+			authorization: "Bearer " + (await auth.currentUser?.getIdToken()),
+		},
+	});
+	return response.data;
+}
+
+export async function getUserScores(uid: string) {
+	const response = await axios.get(`${API_URL}/users/${uid}`, {
+		headers: {
+			authorization: "Bearer " + (await auth.currentUser?.getIdToken()),
+		},
+	});
 	return response.data;
 }
