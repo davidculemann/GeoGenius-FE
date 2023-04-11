@@ -11,7 +11,7 @@ const StyledModeContainer = styled.div`
 	align-items: center;
 	gap: 1.6rem;
 	padding: 0 1.6rem;
-	box-shadow: 0px 0px 0.2rem rgba(0, 0, 0, 0.2);
+	box-shadow: 0 0 0.2rem rgba(0, 0, 0, 0.2);
 	cursor: pointer;
 	.game-mode__icon {
 		flex-shrink: 0;
@@ -50,38 +50,40 @@ const StyledModeContainer = styled.div`
 		display: flex;
 		width: 3.2rem;
 		margin-left: auto;
-		opacity: 0;
-		transition: opacity 0.2s ease-in-out, width 0.2s ease-in-out,
-			background-color 0.2s ease-in-out;
 		padding: 1.2rem;
 		cursor: pointer;
 		position: relative;
-		&::before {
-			content: "Customise";
-			font-size: 1.6rem;
+		@media (hover: hover) and (pointer: fine) {
 			opacity: 0;
-			transition: opacity 0.2s ease-in-out;
-			position: absolute;
-			right: 0.8rem;
-		}
-		&:hover {
-			background-color: var(--dark-shade);
-			width: 12rem;
+			transition: opacity 0.2s ease-in-out, width 0.2s ease-in-out,
+				background-color 0.2s ease-in-out;
 			&::before {
-				opacity: 1;
+				content: "Customise";
+				font-size: 1.6rem;
+				opacity: 0;
+				transition: opacity 0.2s ease-in-out;
+				position: absolute;
+				right: 0.8rem;
+			}
+			&:hover {
+				background-color: var(--dark-shade);
+				width: 12rem;
+				&::before {
+					opacity: 1;
+				}
+				i {
+					transition: transform 0.2s ease-in-out;
+					transform: rotate(-360deg);
+				}
+			}
+			&:not(:hover) i {
+				transform: rotate(360deg);
 			}
 			i {
-				transition: transform 0.2s ease-in-out;
-				transform: rotate(-360deg);
+				transition: transform 0.3s ease-in-out;
+				margin-right: 0.8rem;
+				transform: rotate(0deg);
 			}
-		}
-		&:not(:hover) i {
-			transform: rotate(360deg);
-		}
-		i {
-			transition: transform 0.3s ease-in-out;
-			margin-right: 0.8rem;
-			transform: rotate(0deg);
 		}
 	}
 	&:hover {

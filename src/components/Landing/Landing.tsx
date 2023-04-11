@@ -13,7 +13,7 @@ const StyledLanding = styled.div`
 		display: grid;
 		grid-template-columns: 1fr min-content;
 		gap: 1.6rem;
-		@media (max-width: var(--min-laptop-size)) {
+		@media (hover: none) and (pointer: coarse) {
 			grid-template-columns: 1fr;
 		}
 	}

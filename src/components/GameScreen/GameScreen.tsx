@@ -6,12 +6,13 @@ import IconButton from "../shared/IconButton";
 import { useNavigate } from "react-router-dom";
 import StyledTooltip from "../shared/StyledTooltip";
 import { useAppSelector } from "../../logic/hooks";
-import { capitaliseModeName } from "../../logic/utils";
+import { capitaliseModeName, getCountryName } from "../../logic/utils";
 import { useAppDispatch } from "../../logic/hooks";
 import { setUserScores } from "../../logic/reducer";
 import EndGameModal from "./EndGameModal";
 import React from "react";
 import lottie from "lottie-web";
+import Button from "../shared/Button";
 
 interface CountryData {
 	countryCode: string;
@@ -35,6 +36,7 @@ function GameScreen() {
 	const navigate = useNavigate();
 	const currentUser = useAppSelector((state) => state.currentUser);
 	const userScores = useAppSelector((state) => state.userScores);
+	const isTouchDevice = useAppSelector((state) => state.isTouchDevice);
 	const [countryData, setCountryData] = useState<CountryData[]>([]);
 	const [score, setScore] = useState<number>(0);
 	const [scoreHidden, setScoreHidden] = useState<boolean>(true);
@@ -45,6 +47,8 @@ function GameScreen() {
 	const loadingContainerRef = useRef<HTMLDivElement>(null);
 	const animationRef = useRef<lottie.AnimationItem | null>(null);
 	const oldHighScore = useRef(modeHighScore);
+	const leftCountryCode = countryData?.[countryIndices[0]]?.countryCode;
+	const rightCountryCode = countryData?.[countryIndices[1]]?.countryCode;
 
 	const handleVote = (isHigher: boolean) => {
 		setScoreHidden(false);
@@ -122,7 +126,7 @@ function GameScreen() {
 					<div className="category-icon__container">
 						<TooltipCategoryIcon mode={mode} />
 					</div>
-					{userScores && (
+					{userScores && !isTouchDevice && (
 						<div className="high-score">
 							(high score: <b>{modeHighScore}</b>)
 						</div>
@@ -165,38 +169,43 @@ function GameScreen() {
 				<div className="country-container">
 					<div className="left-country">
 						<CountryContainer
-							countryCode={
-								countryData[countryIndices[0]].countryCode
-							}
+							countryCode={leftCountryCode}
 							metricNumber={countryData[countryIndices[0]][mode]!}
 							metricName={mode}
 						/>
 					</div>
 					<div className="voting-controls">
-						<button
-							disabled={showModal}
-							className="vote-button"
-							onClick={() => {
-								handleVote(true);
-							}}
-						>
-							<i className="fa-solid fa-circle-chevron-up" />
-						</button>
-						<button
-							disabled={showModal}
-							className="vote-button"
-							onClick={() => {
-								handleVote(false);
-							}}
-						>
-							<i className="fa-solid fa-circle-chevron-down" />
-						</button>
+						<p>{getCountryName(rightCountryCode)} has a</p>
+						<div className="button-container">
+							<Button
+								label="Higher"
+								disabled={showModal}
+								onClick={() => {
+									handleVote(true);
+								}}
+								variant="primary"
+								icon="fa-solid fa-circle-arrow-up"
+								className="voting-button"
+							/>
+							<Button
+								label="Lower"
+								disabled={showModal}
+								variant="primary"
+								onClick={() => {
+									handleVote(false);
+								}}
+								icon="fa-solid fa-circle-arrow-down"
+								className="voting-button"
+							/>
+						</div>
+						<p>
+							{capitaliseModeName(mode)} than{" "}
+							{getCountryName(leftCountryCode)}
+						</p>
 					</div>
 					<div className="right-country">
 						<CountryContainer
-							countryCode={
-								countryData[countryIndices[1]].countryCode
-							}
+							countryCode={rightCountryCode}
 							metricNumber={countryData[countryIndices[1]][mode]!}
 							metricName={mode}
 							hidden={scoreHidden}

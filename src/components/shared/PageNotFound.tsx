@@ -11,7 +11,7 @@ const PageNotFound = styled.div`
 	padding: 2rem;
 
 	h1 {
-		font-size: 18px;
+		font-size: 1.8rem;
 	}
 `;
 

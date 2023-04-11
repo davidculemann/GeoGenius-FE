@@ -32,6 +32,7 @@ type ButtonProps = {
 	icon?: string | undefined;
 	trailing?: boolean | undefined;
 	className?: string;
+	disabled?: boolean;
 };
 
 export default function Button({
@@ -41,9 +42,11 @@ export default function Button({
 	icon,
 	trailing,
 	className,
+	disabled,
 }: ButtonProps) {
 	return (
 		<StyledButton
+			disabled={disabled}
 			trailing={trailing}
 			variant={variant}
 			onClick={onClick}
