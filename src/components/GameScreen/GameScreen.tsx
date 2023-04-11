@@ -45,10 +45,12 @@ function GameScreen() {
 	const [showModal, setShowModal] = useState<boolean>(false);
 	const modeHighScore = userScores?.[mode!] || 0;
 	const loadingContainerRef = useRef<HTMLDivElement>(null);
+	const scoreContainerRef = useRef<HTMLDivElement>(null);
 	const animationRef = useRef<lottie.AnimationItem | null>(null);
 	const oldHighScore = useRef(modeHighScore);
 	const leftCountryCode = countryData?.[countryIndices[0]]?.countryCode;
 	const rightCountryCode = countryData?.[countryIndices[1]]?.countryCode;
+	const isHighScore = score > modeHighScore;
 
 	const handleVote = (isHigher: boolean) => {
 		setScoreHidden(false);
@@ -117,6 +119,21 @@ function GameScreen() {
 		return () => animationRef.current?.destroy();
 	}, [loading]);
 
+	useEffect(() => {
+		if (isHighScore) {
+			animationRef.current = lottie.loadAnimation({
+				container: scoreContainerRef.current as Element,
+				renderer: "svg",
+				loop: false,
+				autoplay: true,
+				path: "/animations/congratulations.json",
+			});
+		} else if (animationRef.current) {
+			animationRef.current?.destroy();
+		}
+		return () => animationRef.current?.destroy();
+	}, [isHighScore]);
+
 	if (!mode) return <div>Error loading game</div>;
 	return (
 		<div className="game-screen">
@@ -134,15 +151,15 @@ function GameScreen() {
 				</div>
 				<div className="score-tracker">
 					<StyledTooltip
-						open={
-							userScores && score > modeHighScore ? true : false
-						}
-						title={
-							score > modeHighScore ? "New High Score! 🎉" : ""
-						}
+						open={userScores && isHighScore ? true : false}
+						title={isHighScore ? "New High Score! 🎉" : ""}
 					>
 						<div className="score-number">{score}</div>
 					</StyledTooltip>
+					<div
+						className="score-animation-container"
+						ref={scoreContainerRef}
+					></div>
 				</div>
 				<div className="game-header__right">
 					<IconButton

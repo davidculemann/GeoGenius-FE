@@ -29,6 +29,7 @@
 		.score-tracker {
 			display: flex;
 			justify-content: center;
+			position: relative;
 			.score-number {
 				position: relative;
 				font-size: 5.6rem;
@@ -43,6 +44,12 @@
 					right: 100%;
 					bottom: 0.8rem;
 				}
+			}
+			.score-animation-container {
+				position: absolute;
+				top: calc(50% - 8rem);
+				width: 16rem;
+				height: 16rem;
 			}
 		}
 		.game-header__right {

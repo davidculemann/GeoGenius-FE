@@ -35,6 +35,10 @@ const ModalContainer = styled.div`
 	}
 	.message {
 		margin-bottom: 1.6rem;
+		color: #fff;
+		@media (hover: none) and (pointer: coarse) {
+			font-size: 1.8rem;
+		}
 	}
 	.actions {
 		display: flex;
