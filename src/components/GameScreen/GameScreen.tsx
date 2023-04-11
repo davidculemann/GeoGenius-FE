@@ -124,14 +124,11 @@ function GameScreen() {
 			animationRef.current = lottie.loadAnimation({
 				container: scoreContainerRef.current as Element,
 				renderer: "svg",
-				loop: false,
+				loop: 1,
 				autoplay: true,
 				path: "/animations/congratulations.json",
 			});
-		} else if (animationRef.current) {
-			animationRef.current?.destroy();
 		}
-		return () => animationRef.current?.destroy();
 	}, [isHighScore]);
 
 	if (!mode) return <div>Error loading game</div>;
