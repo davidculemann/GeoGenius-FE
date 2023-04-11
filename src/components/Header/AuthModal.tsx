@@ -208,7 +208,7 @@ function AuthModal({ authMode, setAuthMode }: AuthProps) {
 								id="email-input"
 								autoComplete={"email"}
 								type="email"
-								autoFocus={authMode === "Log in"}
+								autoFocus={authMode !== "Sign up"}
 								required={true}
 								value={email}
 								onChange={(e) => setEmail(e.target.value)}

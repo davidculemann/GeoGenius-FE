@@ -28,9 +28,11 @@
 }
 
 body {
-	min-height: 100vh;
-	//overscroll-behavior: none;
+	height: 100vh;
 	font-size: 1.6rem;
+	@media (hover: none) and (pointer: coarse) {
+		height: 100dvh;
+	}
 }
 
 img,
