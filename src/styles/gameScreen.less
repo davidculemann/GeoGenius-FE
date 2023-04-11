@@ -3,7 +3,7 @@
 	flex-direction: column;
 	.game-header-bar {
 		display: flex;
-		border-bottom: 1px solid var(--light-border-color);
+		border-bottom: 0.1rem solid var(--light-border-color);
 		align-items: baseline;
 		i {
 			display: flex;
@@ -73,7 +73,7 @@
 	.country-container {
 		display: grid;
 		grid-template-columns: 1fr 12rem 1fr;
-		@media (max-width: var(--min-laptop-size)) {
+		@media (hover: none) and (pointer: coarse) {
 			grid-template-columns: 1fr;
 		}
 		gap: 1.6rem;

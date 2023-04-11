@@ -8,8 +8,8 @@ const StyledSetupContainer = styled.div`
 	height: fit-content;
 	border-radius: 3.2rem;
 	border: 0.1rem solid var(--light-border-color);
-	filter: drop-shadow(0px 0.4rem 0.4rem rgba(0, 0, 0, 0.2));
-	box-shadow: 0px 0px 0.4rem rgba(0, 0, 0, 0.2);
+	filter: drop-shadow(0 0.4rem 0.4rem rgba(0, 0, 0, 0.2));
+	box-shadow: 0 0 0.4rem rgba(0, 0, 0, 0.2);
 	.left-container {
 		padding: 2.6rem;
 		width: 20rem;

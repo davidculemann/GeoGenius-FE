@@ -35,6 +35,10 @@ const StyledCountryContainer = styled.div`
 		flex-direction: column;
 		gap: 1.6rem;
 		font-size: 1.8rem;
+		@media (hover: none) and (pointer: coarse) {
+			flex-direction: row;
+			align-items: baseline;
+		}
 		.metric-container {
 			display: flex;
 			align-items: baseline;

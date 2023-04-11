@@ -14,9 +14,9 @@ const DeletingTextContainer = styled.div`
 		&.cursor-blink::after {
 			content: "";
 			position: absolute;
-			right: -2px;
-			top: 4px;
-			width: 2px;
+			right: -0.2rem;
+			top: 0.4rem;
+			width: 0.2rem;
 			height: 80%;
 			background-color: #ffffffbf;
 		}

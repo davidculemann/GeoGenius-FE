@@ -9,7 +9,11 @@ import { auth } from "../../firebase";
 import IconButton from "../shared/IconButton";
 import { useAppDispatch, useAppSelector } from "../../logic/hooks";
 import { getUserScores } from "../../logic/actions";
-import { setCurrentUser, setUserScores } from "../../logic/reducer";
+import {
+	setCurrentUser,
+	setIsTouchDevice,
+	setUserScores,
+} from "../../logic/reducer";
 
 const NavContainer = styled.nav`
 	display: flex;
@@ -36,6 +40,9 @@ export default function Header() {
 	const dispatch = useAppDispatch();
 
 	useEffect(() => {
+		const supportsTouch =
+			"ontouchstart" in window || navigator.maxTouchPoints > 0;
+		dispatch(setIsTouchDevice(supportsTouch));
 		const unsubscribe = auth.onAuthStateChanged((user) => {
 			dispatch(
 				setCurrentUser(
