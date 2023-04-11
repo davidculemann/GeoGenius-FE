@@ -227,6 +227,9 @@ function GameScreen() {
 							metricNumber={countryData[countryIndices[1]][mode]!}
 							metricName={mode}
 							hidden={scoreHidden}
+							nextCountryCode={
+								countryData[countryIndices[1] + 1]?.countryCode
+							}
 						/>
 					</div>
 				</div>

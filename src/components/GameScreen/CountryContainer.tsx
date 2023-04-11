@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { useEffect } from "react";
 import {
 	capitaliseModeName,
 	formatMetricNumber,
@@ -12,6 +13,7 @@ interface CountryContainerProps {
 	metricNumber: string;
 	metricName: string;
 	hidden?: boolean;
+	nextCountryCode?: string;
 }
 
 const StyledCountryContainer = styled.div`
@@ -53,10 +55,18 @@ const StyledCountryContainer = styled.div`
 
 function CountryContainer({
 	countryCode,
+	nextCountryCode,
 	metricNumber,
 	metricName,
 	hidden,
 }: CountryContainerProps) {
+	useEffect(() => {
+		if (nextCountryCode) {
+			const image = new Image();
+			image.src = `/images/countries/${nextCountryCode.toLocaleLowerCase()}/vector.svg`;
+		}
+	}, [countryCode]);
+
 	return (
 		<StyledCountryContainer>
 			<div className="image-container">
