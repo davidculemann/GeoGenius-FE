@@ -86,12 +86,14 @@ function EndGameModal({
 					label="Retry"
 					variant="primary"
 					icon="fa-solid fa-redo"
+					trailing={true}
 				/>
 				<Button
 					onClick={() => navigate("/")}
 					label="Home"
 					variant="primary"
 					icon="fa-solid fa-home"
+					trailing={true}
 				/>
 			</div>
 		</ModalContainer>

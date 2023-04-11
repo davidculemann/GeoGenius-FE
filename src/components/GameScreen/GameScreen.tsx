@@ -70,13 +70,17 @@ function GameScreen() {
 				setcountryIndices((prev) => [prev[0] + 1, prev[1] + 1]);
 			}, 1250);
 		} else {
-			setShowModal(true);
-			if (currentUser?.uid)
-				postScore({ score, mode: mode!, uid: currentUser.uid }).then(
-					(res) => {
+			setTimeout(() => {
+				setShowModal(true);
+				if (currentUser?.uid)
+					postScore({
+						score,
+						mode: mode!,
+						uid: currentUser.uid,
+					}).then((res) => {
 						dispatch(setUserScores(res));
-					}
-				);
+					});
+			}, 2500);
 		}
 	};
 
