@@ -17,11 +17,13 @@ const StyledButton = styled.button<ButtonProps>`
 		margin: ${(props) =>
 			props.trailing ? "0 0.8rem 0 0" : "0 0 0 0.8rem"};
 	}
-	&:hover {
-		background-color: ${(props) =>
-			props.variant === "primary"
-				? "var(--secondary-green-hover)"
-				: "var(--dark-shade-2)"};
+	@media (hover: hover) {
+		&:hover {
+			background-color: ${(props) =>
+				props.variant === "primary"
+					? "var(--secondary-green-hover)"
+					: "var(--dark-shade-2)"};
+		}
 	}
 `;
 

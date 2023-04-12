@@ -37,9 +37,21 @@ const StyledCountryContainer = styled.div`
 		flex-direction: column;
 		gap: 1.6rem;
 		font-size: 1.8rem;
+		width: 100%;
 		@media (hover: none) and (pointer: coarse) {
 			flex-direction: row;
 			align-items: baseline;
+		}
+		@media (hover: hover) and (pointer: fine) {
+			.metric-container:not(.hidden) {
+				justify-content: center;
+			}
+			.metric-container.hidden {
+				margin-left: calc(50% - 5.6rem);
+			}
+		}
+		.country-name {
+			text-align: center;
 		}
 		.metric-container {
 			display: flex;
@@ -60,6 +72,8 @@ function CountryContainer({
 	metricName,
 	hidden,
 }: CountryContainerProps) {
+	const rightCountry = hidden !== undefined;
+
 	useEffect(() => {
 		if (nextCountryCode) {
 			const image = new Image();
@@ -79,7 +93,11 @@ function CountryContainer({
 				<div className="country-name">
 					{getFlagEmoji(countryCode)} {getCountryName(countryCode)}
 				</div>
-				<div className="metric-container">
+				<div
+					className={`metric-container ${
+						rightCountry ? "hidden" : ""
+					}`}
+				>
 					{capitaliseModeName(metricName)}
 					{metricName === "gdp" && !hidden && <span>$ </span>}
 					<span className="metric-number">

@@ -42,6 +42,7 @@ function GameScreen() {
 	const [scoreHidden, setScoreHidden] = useState<boolean>(true);
 	const [countryIndices, setcountryIndices] = useState<number[]>([0, 1]);
 	const [loading, setLoading] = useState<boolean>(true);
+	const [comparingMetric, setComparingMetric] = useState<boolean>(false);
 	const [showModal, setShowModal] = useState<boolean>(false);
 	const modeHighScore = userScores?.[mode!] || 0;
 	const loadingContainerRef = useRef<HTMLDivElement>(null);
@@ -54,6 +55,7 @@ function GameScreen() {
 
 	const handleVote = (isHigher: boolean) => {
 		setScoreHidden(false);
+		setComparingMetric(true);
 		const isCorrect =
 			(isHigher &&
 				Number(countryData[countryIndices[0]][mode!]) <
@@ -68,6 +70,7 @@ function GameScreen() {
 				setScore((prev) => prev + 1);
 				setScoreHidden(true);
 				setcountryIndices((prev) => [prev[0] + 1, prev[1] + 1]);
+				setComparingMetric(false);
 			}, 1250);
 		} else {
 			setTimeout(() => {
@@ -80,7 +83,7 @@ function GameScreen() {
 					}).then((res) => {
 						dispatch(setUserScores(res));
 					});
-			}, 2500);
+			}, 2000);
 		}
 	};
 
@@ -101,6 +104,7 @@ function GameScreen() {
 		setScore(0);
 		setScoreHidden(true);
 		setShowModal(false);
+		setComparingMetric(false);
 		if (mode) handleSetCountryData();
 	};
 
@@ -124,7 +128,7 @@ function GameScreen() {
 	}, [loading]);
 
 	useEffect(() => {
-		if (isHighScore) {
+		if (isHighScore && userScores) {
 			animationRef.current = lottie.loadAnimation({
 				container: scoreContainerRef.current as Element,
 				renderer: "svg",
@@ -197,7 +201,7 @@ function GameScreen() {
 						<div className="button-container">
 							<Button
 								label="Higher"
-								disabled={showModal}
+								disabled={showModal || comparingMetric}
 								onClick={() => {
 									handleVote(true);
 								}}
@@ -207,7 +211,7 @@ function GameScreen() {
 							/>
 							<Button
 								label="Lower"
-								disabled={showModal}
+								disabled={showModal || comparingMetric}
 								variant="primary"
 								onClick={() => {
 									handleVote(false);
