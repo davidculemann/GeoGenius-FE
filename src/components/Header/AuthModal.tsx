@@ -1,14 +1,11 @@
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import Button from "../shared/Button";
 import { ClickAwayListener } from "@mui/base";
-import { FormControl, TextField } from "@mui/material";
+import { TextField } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
-import Input from "@mui/material/Input";
 import InputAdornment from "@mui/material/InputAdornment";
-import InputLabel from "@mui/material/InputLabel";
 import { keyframes } from "styled-components";
 import styled from "styled-components";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
 	firebaseLogin,
 	firebaseSignup,
@@ -16,6 +13,7 @@ import {
 } from "../../logic/actions";
 import LoadingButton from "../shared/LoadingButton";
 import { handleSetError } from "../../logic/utils";
+import lottie from "lottie-web";
 
 const blurIn = keyframes`
 	from {
@@ -82,6 +80,22 @@ const StyledModal = styled.div`
 			}
 		}
 	}
+	.success-overlay {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 0;
+		height: 0;
+		opacity: 0;
+		transition: opacity 0.2s linear;
+		background-color: #fff;
+		z-index: 2;
+		&.success {
+			width: 100%;
+			height: 100%;
+			opacity: 1;
+		}
+	}
 `;
 
 interface AuthProps {
@@ -91,6 +105,7 @@ interface AuthProps {
 
 function AuthModal({ authMode, setAuthMode }: AuthProps) {
 	const [showPassword, setShowPassword] = useState(false);
+	const [showSuccessOverlay, setShowSuccessOverlay] = useState(false);
 	const handleClickShowPassword = () => setShowPassword((show) => !show);
 	const [password, setPassword] = useState("");
 	const [email, setEmail] = useState("");
@@ -99,6 +114,23 @@ function AuthModal({ authMode, setAuthMode }: AuthProps) {
 	const [emailError, setEmailError] = useState("");
 	const [usernameError, setUsernameError] = useState("");
 	const [authPending, setAuthPending] = useState(false);
+	const animationRef = useRef<any>(null);
+	const successOverlayRef = useRef<HTMLDivElement>(null);
+
+	useEffect(() => {
+		if (showSuccessOverlay) {
+			animationRef.current = lottie.loadAnimation({
+				container: successOverlayRef.current as Element,
+				renderer: "svg",
+				loop: true,
+				autoplay: true,
+				path: "/animations/signup-success.json",
+			});
+		} else if (animationRef.current) {
+			animationRef.current?.destroy();
+		}
+		return () => animationRef.current?.destroy();
+	}, [showSuccessOverlay]);
 
 	const handleSignup = async () => {
 		setAuthPending(true);
@@ -117,7 +149,8 @@ function AuthModal({ authMode, setAuthMode }: AuthProps) {
 				setUsernameError,
 			});
 		} else {
-			setAuthMode("");
+			setShowSuccessOverlay(true);
+			setTimeout(() => setAuthMode(""), 4000);
 		}
 		setAuthPending(false);
 	};
@@ -268,6 +301,12 @@ function AuthModal({ authMode, setAuthMode }: AuthProps) {
 							</>
 						)}
 					</div>
+					<div
+						className={`success-overlay ${
+							showSuccessOverlay ? "success" : ""
+						}`}
+						ref={successOverlayRef}
+					></div>
 				</div>
 			</ClickAwayListener>
 		</StyledModal>
