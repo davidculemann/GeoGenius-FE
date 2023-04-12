@@ -41,14 +41,14 @@ export async function firebaseSignup({
 		const login = await firebaseLogin({ email, password });
 		return login;
 	} catch (error: any) {
-		const errorCode = error.response?.data?.code || "unknown";
-		const errorMessage =
-			error.response?.data?.message || "An unknown error occurred.";
-		const errorProps: ErrorProps = {
+		console.log(error);
+		const errorCode = error?.response?.data?.error?.code || "unknown";
+		const errorMessage = error.message;
+		const errorObject: ErrorProps = {
 			code: errorCode,
 			message: errorMessage,
 		};
-		return errorProps;
+		return errorObject;
 	}
 }
 
@@ -62,13 +62,14 @@ export async function firebaseLogin({ email, password }: AuthProps) {
 		const user = userCredential.user;
 		return user;
 	} catch (error: any) {
-		const errorCode = error.code || "unknown";
-		const errorMessage = error.message || "An unknown error occurred.";
-		const errorProps: ErrorProps = {
+		console.log(error);
+		const errorCode = error?.response?.data?.error?.code || "unknown";
+		const errorMessage = error.message;
+		const errorObject: ErrorProps = {
 			code: errorCode,
 			message: errorMessage,
 		};
-		return errorProps;
+		return errorObject;
 	}
 }
 
