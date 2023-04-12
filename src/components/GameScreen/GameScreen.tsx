@@ -144,11 +144,13 @@ function GameScreen() {
 		<div className="game-screen">
 			<div className="game-header-bar">
 				<div className="game-header__left">
-					<div className="categories-text">categories:</div>
+					{!isTouchDevice && (
+						<div className="categories-text">categories:</div>
+					)}
 					<div className="category-icon__container">
 						<TooltipCategoryIcon mode={mode} />
 					</div>
-					{userScores && !isTouchDevice && (
+					{userScores && (
 						<div className="high-score">
 							(high score: <b>{modeHighScore}</b>)
 						</div>
@@ -207,7 +209,7 @@ function GameScreen() {
 								}}
 								variant="primary"
 								icon="fa-solid fa-circle-arrow-up"
-								className="voting-button"
+								className="voting-button static"
 							/>
 							<Button
 								label="Lower"
@@ -217,7 +219,7 @@ function GameScreen() {
 									handleVote(false);
 								}}
 								icon="fa-solid fa-circle-arrow-down"
-								className="voting-button"
+								className="voting-button static"
 							/>
 						</div>
 						<p>

@@ -25,6 +25,7 @@ const ModalContainer = styled.div`
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
+	padding: 0.8rem;
 	.animation-container {
 		display: flex;
 		flex-direction: column;
@@ -36,13 +37,20 @@ const ModalContainer = styled.div`
 	.message {
 		margin-bottom: 1.6rem;
 		color: #fff;
-		@media (hover: none) and (pointer: coarse) {
-			font-size: 1.8rem;
-		}
+		text-align: center;
 	}
 	.actions {
 		display: flex;
 		gap: 1.6rem;
+	}
+	@media (hover: none) and (pointer: coarse) {
+		.animation-container {
+			height: 36rem;
+			width: 36rem;
+		}
+		.message {
+			font-size: 2.4rem;
+		}
 	}
 `;
 
