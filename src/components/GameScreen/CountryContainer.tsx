@@ -31,6 +31,13 @@ const StyledCountryContainer = styled.div`
 			height: 32rem;
 			width: 32rem;
 		}
+		@media (hover: none) and (pointer: coarse) {
+			padding: 1.6rem;
+			img {
+				height: 28rem;
+				width: 28rem;
+			}
+		}
 	}
 	.country-info-container {
 		display: flex;
