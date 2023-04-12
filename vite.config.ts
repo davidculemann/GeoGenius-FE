@@ -7,5 +7,6 @@ export default () => {
 	return defineConfig({
 		plugins: [react(), tsconfigPaths()],
 		base: "./",
+		appType: "spa",
 	});
 };
