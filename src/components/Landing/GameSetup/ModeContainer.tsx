@@ -36,7 +36,9 @@ const StyledModeContainer = styled.div`
 				i {
 					display: flex;
 					align-items: center;
-					opacity: 0;
+					@media (hover: hover) and (pointer: fine) {
+						opacity: 0;
+					}
 				}
 			}
 		}

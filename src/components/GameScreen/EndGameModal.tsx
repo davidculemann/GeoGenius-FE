@@ -9,6 +9,7 @@ interface EndGameModalProps {
 	score: number;
 	oldScore: number;
 	registeredUser: boolean;
+	authChanged: boolean;
 }
 
 const ModalContainer = styled.div`
@@ -59,6 +60,7 @@ function EndGameModal({
 	score,
 	oldScore,
 	registeredUser,
+	authChanged,
 }: EndGameModalProps) {
 	const modalRef = useRef<HTMLDivElement>(null);
 	const animationRef = useRef<lottie.AnimationItem | null>(null);
@@ -78,11 +80,12 @@ function EndGameModal({
 		return () => animationRef.current?.destroy();
 	}, []);
 
-	const message = !registeredUser
-		? `You scored ${score}. You must be logged in to save your score.`
-		: isHighScore
-		? `New high score! You scored ${score}, your old high score was ${oldScore}.`
-		: `You scored ${score}. Your high score is ${oldScore}.`;
+	const message =
+		!registeredUser || authChanged
+			? `You scored ${score}. You must be logged in to save your score.`
+			: isHighScore
+			? `New high score! You scored ${score}, your old high score was ${oldScore}.`
+			: `You scored ${score}. Your high score is ${oldScore}.`;
 
 	return (
 		<ModalContainer>
