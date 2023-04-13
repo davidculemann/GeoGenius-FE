@@ -122,9 +122,9 @@ function AuthModal({ authMode, setAuthMode }: AuthProps) {
 			animationRef.current = lottie.loadAnimation({
 				container: successOverlayRef.current as Element,
 				renderer: "svg",
-				loop: true,
+				loop: false,
 				autoplay: true,
-				path: "/animations/signup-success.json",
+				path: "/animations/thank-you.json",
 			});
 		} else if (animationRef.current) {
 			animationRef.current?.destroy();
@@ -150,7 +150,7 @@ function AuthModal({ authMode, setAuthMode }: AuthProps) {
 			});
 		} else {
 			setShowSuccessOverlay(true);
-			setTimeout(() => setAuthMode(""), 4000);
+			setTimeout(() => setAuthMode(""), 3000);
 		}
 		setAuthPending(false);
 	};
