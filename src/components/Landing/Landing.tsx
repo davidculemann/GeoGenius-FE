@@ -1,6 +1,7 @@
 import DeletingText from "./DeletingText";
 import styled from "styled-components";
 import GameSetup from "./GameSetup/GameSetup";
+import Leaderboard from "./Leaderboard";
 
 const StyledLanding = styled.div`
 	display: flex;
@@ -27,7 +28,7 @@ function Landing() {
 			/>
 			<div className="landing-content__container">
 				<GameSetup />
-				{/* LeaderBoard component here */}
+				<Leaderboard />
 			</div>
 		</StyledLanding>
 	);
