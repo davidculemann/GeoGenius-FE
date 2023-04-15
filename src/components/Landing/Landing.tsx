@@ -28,7 +28,7 @@ function Landing() {
 			/>
 			<div className="landing-content__container">
 				<GameSetup />
-				<Leaderboard />
+				{/* <Leaderboard /> */}
 			</div>
 		</StyledLanding>
 	);
