@@ -39,6 +39,7 @@ function GameScreen() {
 	const isTouchDevice = useAppSelector((state) => state.isTouchDevice);
 	const [countryData, setCountryData] = useState<CountryData[]>([]);
 	const [score, setScore] = useState<number>(0);
+	const [tooltipIsOpen, setTooltipIsOpen] = useState(false);
 	const [scoreHidden, setScoreHidden] = useState<boolean>(true);
 	const [countryIndices, setcountryIndices] = useState<number[]>([0, 1]);
 	const [loading, setLoading] = useState<boolean>(true);
@@ -49,6 +50,7 @@ function GameScreen() {
 	const scoreContainerRef = useRef<HTMLDivElement>(null);
 	const animationRef = useRef<lottie.AnimationItem | null>(null);
 	const oldHighScore = useRef(modeHighScore);
+	const hasAuthChanged = useRef(false);
 	const leftCountryCode = countryData?.[countryIndices[0]]?.countryCode;
 	const rightCountryCode = countryData?.[countryIndices[1]]?.countryCode;
 	const isHighScore = score > modeHighScore;
@@ -75,7 +77,7 @@ function GameScreen() {
 		} else {
 			setTimeout(() => {
 				setShowModal(true);
-				if (currentUser?.uid)
+				if (currentUser?.uid && !hasAuthChanged.current)
 					postScore({
 						score,
 						mode: mode!,
@@ -86,6 +88,12 @@ function GameScreen() {
 			}, 2000);
 		}
 	};
+
+	useEffect(() => {
+		if (currentUser?.uid && score > 0) {
+			hasAuthChanged.current = true;
+		}
+	}, [currentUser]);
 
 	const handleSetCountryData = async () => {
 		try {
@@ -100,6 +108,7 @@ function GameScreen() {
 
 	const handleRestart = () => {
 		oldHighScore.current = modeHighScore;
+		hasAuthChanged.current = false;
 		setLoading(true);
 		setScore(0);
 		setScoreHidden(true);
@@ -144,11 +153,13 @@ function GameScreen() {
 		<div className="game-screen">
 			<div className="game-header-bar">
 				<div className="game-header__left">
-					<div className="categories-text">categories:</div>
+					{!isTouchDevice && (
+						<div className="categories-text">categories:</div>
+					)}
 					<div className="category-icon__container">
 						<TooltipCategoryIcon mode={mode} />
 					</div>
-					{userScores && !isTouchDevice && (
+					{userScores && (
 						<div className="high-score">
 							(high score: <b>{modeHighScore}</b>)
 						</div>
@@ -179,11 +190,18 @@ function GameScreen() {
 					/>
 					<StyledTooltip
 						arrow
+						open={tooltipIsOpen}
+						onOpen={() => setTooltipIsOpen(true)}
+						onClose={() => setTooltipIsOpen(false)}
 						title={`For the current metric (${capitaliseModeName(
 							mode
-						)}), choose wether the country on the right should be higher or lower.`}
+						)}), choose whether the second country should be higher or lower.`}
 					>
-						<i className="far fa-circle-question" />
+						<i
+							className="far fa-circle-question"
+							role="button"
+							onClick={() => setTooltipIsOpen((prev) => !prev)}
+						/>
 					</StyledTooltip>
 				</div>
 			</div>
@@ -207,7 +225,7 @@ function GameScreen() {
 								}}
 								variant="primary"
 								icon="fa-solid fa-circle-arrow-up"
-								className="voting-button"
+								className="voting-button static"
 							/>
 							<Button
 								label="Lower"
@@ -217,7 +235,7 @@ function GameScreen() {
 									handleVote(false);
 								}}
 								icon="fa-solid fa-circle-arrow-down"
-								className="voting-button"
+								className="voting-button static"
 							/>
 						</div>
 						<p>
@@ -245,6 +263,7 @@ function GameScreen() {
 					score={score}
 					oldScore={oldHighScore.current || 0}
 					registeredUser={!!currentUser}
+					authChanged={hasAuthChanged.current}
 				/>
 			)}
 		</div>

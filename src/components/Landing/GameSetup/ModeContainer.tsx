@@ -36,7 +36,9 @@ const StyledModeContainer = styled.div`
 				i {
 					display: flex;
 					align-items: center;
-					opacity: 0;
+					@media (hover: hover) and (pointer: fine) {
+						opacity: 0;
+					}
 				}
 			}
 		}
@@ -53,6 +55,7 @@ const StyledModeContainer = styled.div`
 		padding: 1.2rem;
 		cursor: pointer;
 		position: relative;
+		align-items: center;
 		@media (hover: hover) and (pointer: fine) {
 			opacity: 0;
 			transition: opacity 0.2s ease-in-out, width 0.2s ease-in-out,

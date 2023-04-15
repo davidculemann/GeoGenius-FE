@@ -9,6 +9,7 @@ interface EndGameModalProps {
 	score: number;
 	oldScore: number;
 	registeredUser: boolean;
+	authChanged: boolean;
 }
 
 const ModalContainer = styled.div`
@@ -25,6 +26,7 @@ const ModalContainer = styled.div`
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
+	padding: 0.8rem;
 	.animation-container {
 		display: flex;
 		flex-direction: column;
@@ -36,13 +38,20 @@ const ModalContainer = styled.div`
 	.message {
 		margin-bottom: 1.6rem;
 		color: #fff;
-		@media (hover: none) and (pointer: coarse) {
-			font-size: 1.8rem;
-		}
+		text-align: center;
 	}
 	.actions {
 		display: flex;
 		gap: 1.6rem;
+	}
+	@media (hover: none) and (pointer: coarse) {
+		.animation-container {
+			height: 36rem;
+			width: 36rem;
+		}
+		.message {
+			font-size: 2.4rem;
+		}
 	}
 `;
 
@@ -51,6 +60,7 @@ function EndGameModal({
 	score,
 	oldScore,
 	registeredUser,
+	authChanged,
 }: EndGameModalProps) {
 	const modalRef = useRef<HTMLDivElement>(null);
 	const animationRef = useRef<lottie.AnimationItem | null>(null);
@@ -70,11 +80,12 @@ function EndGameModal({
 		return () => animationRef.current?.destroy();
 	}, []);
 
-	const message = !registeredUser
-		? `You scored ${score}. You must be logged in to save your score.`
-		: isHighScore
-		? `New high score! You scored ${score}, your old high score was ${oldScore}.`
-		: `You scored ${score}. Your high score is ${oldScore}.`;
+	const message =
+		!registeredUser || authChanged
+			? `You scored ${score}. You must be logged in to save your score.`
+			: isHighScore
+			? `New high score! You scored ${score}, your old high score was ${oldScore}.`
+			: `You scored ${score}. Your high score is ${oldScore}.`;
 
 	return (
 		<ModalContainer>

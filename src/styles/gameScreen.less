@@ -1,10 +1,23 @@
 .game-screen {
 	display: flex;
 	flex-direction: column;
+	height: 100%;
 	.game-header-bar {
 		display: flex;
 		border-bottom: 0.1rem solid var(--light-border-color);
 		align-items: baseline;
+		@media (hover: none) and (pointer: coarse) {
+			button {
+				height: 4.4rem;
+				width: 4.4rem;
+			}
+			i {
+				font-size: 2.4rem;
+			}
+			.high-score {
+				font-size: 2rem;
+			}
+		}
 		i {
 			display: flex;
 			align-items: center;
@@ -104,8 +117,8 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		height: 20rem;
-		width: 20rem;
+		height: 30rem;
+		width: 30rem;
 		margin: auto;
 	}
 }

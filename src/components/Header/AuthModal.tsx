@@ -1,20 +1,19 @@
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import Button from "../shared/Button";
 import { ClickAwayListener } from "@mui/base";
-import { FormControl } from "@mui/material";
+import { TextField } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
-import Input from "@mui/material/Input";
 import InputAdornment from "@mui/material/InputAdornment";
-import InputLabel from "@mui/material/InputLabel";
 import { keyframes } from "styled-components";
 import styled from "styled-components";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
 	firebaseLogin,
 	firebaseSignup,
 	passwordResetEmail,
 } from "../../logic/actions";
 import LoadingButton from "../shared/LoadingButton";
+import { handleSetError } from "../../logic/utils";
+import lottie from "lottie-web";
 
 const blurIn = keyframes`
 	from {
@@ -81,6 +80,22 @@ const StyledModal = styled.div`
 			}
 		}
 	}
+	.success-overlay {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 0;
+		height: 0;
+		opacity: 0;
+		transition: opacity 0.2s linear;
+		background-color: #fff;
+		z-index: 2;
+		&.success {
+			width: 100%;
+			height: 100%;
+			opacity: 1;
+		}
+	}
 `;
 
 interface AuthProps {
@@ -90,6 +105,7 @@ interface AuthProps {
 
 function AuthModal({ authMode, setAuthMode }: AuthProps) {
 	const [showPassword, setShowPassword] = useState(false);
+	const [showSuccessOverlay, setShowSuccessOverlay] = useState(false);
 	const handleClickShowPassword = () => setShowPassword((show) => !show);
 	const [password, setPassword] = useState("");
 	const [email, setEmail] = useState("");
@@ -98,38 +114,23 @@ function AuthModal({ authMode, setAuthMode }: AuthProps) {
 	const [emailError, setEmailError] = useState("");
 	const [usernameError, setUsernameError] = useState("");
 	const [authPending, setAuthPending] = useState(false);
+	const animationRef = useRef<any>(null);
+	const successOverlayRef = useRef<HTMLDivElement>(null);
 
-	const handleSetError = (error: any) => {
-		console.log(error);
-		switch (error.code) {
-			case "invalid-email":
-				setEmailError(error.message || error.code);
-				break;
-			case "auth/weak-password":
-				setPasswordError(error.message || error.code);
-				break;
-			case "auth/email-already-in-use":
-				setEmailError(error.message || error.code);
-				break;
-			case "auth/email-already-exists":
-				setEmailError(error.message || error.code);
-				break;
-			case "auth/user-not-found":
-				setEmailError(error.message || error.code);
-				break;
-			case "auth/wrong-password":
-				setPasswordError(error.message || error.code);
-				break;
-			case "auth/invalid-username":
-				setUsernameError(error.message || error.code);
-				break;
-			case "username-already-in-use":
-				setUsernameError(error.message || error.code);
-				break;
-			default:
-				break;
+	useEffect(() => {
+		if (showSuccessOverlay) {
+			animationRef.current = lottie.loadAnimation({
+				container: successOverlayRef.current as Element,
+				renderer: "svg",
+				loop: false,
+				autoplay: true,
+				path: "/animations/thank-you.json",
+			});
+		} else if (animationRef.current) {
+			animationRef.current?.destroy();
 		}
-	};
+		return () => animationRef.current?.destroy();
+	}, [showSuccessOverlay]);
 
 	const handleSignup = async () => {
 		setAuthPending(true);
@@ -141,9 +142,15 @@ function AuthModal({ authMode, setAuthMode }: AuthProps) {
 		console.log(res);
 		if ("code" in res) {
 			console.log(`Error ${res.code}: ${res.message}`);
-			handleSetError(res);
+			handleSetError({
+				error: res,
+				setEmailError,
+				setPasswordError,
+				setUsernameError,
+			});
 		} else {
-			setAuthMode("");
+			setShowSuccessOverlay(true);
+			setTimeout(() => setAuthMode(""), 3000);
 		}
 		setAuthPending(false);
 	};
@@ -153,7 +160,12 @@ function AuthModal({ authMode, setAuthMode }: AuthProps) {
 		const res = await firebaseLogin({ email, password });
 		if ("code" in res) {
 			console.error(`Error ${res.code}: ${res.message}`);
-			handleSetError(res);
+			handleSetError({
+				error: res,
+				setEmailError,
+				setPasswordError,
+				setUsernameError,
+			});
 		} else {
 			setAuthMode("");
 		}
@@ -177,63 +189,46 @@ function AuthModal({ authMode, setAuthMode }: AuthProps) {
 					<h1>{authMode}</h1>
 					<div className="auth-fields">
 						{authMode === "Sign up" && (
-							<FormControl variant="standard">
-								<InputLabel
-									htmlFor="username-input"
-									sx={{ zIndex: 2 }}
-								>
-									Username
-								</InputLabel>
-								<Input
-									id="username-input"
-									autoFocus={true}
-									autoComplete={"username"}
-									required={true}
-									value={username}
-									onChange={(e) =>
-										setUsername(e.target.value)
-									}
-									error={!!usernameError}
-								/>
-							</FormControl>
-						)}
-						<FormControl variant="standard">
-							<InputLabel
-								htmlFor="email-input"
-								sx={{ zIndex: 2 }}
-							>
-								Email
-							</InputLabel>
-							<Input
-								id="email-input"
-								autoComplete={"email"}
-								type="email"
-								autoFocus={authMode !== "Sign up"}
+							<TextField
+								label="Username"
+								variant="standard"
+								helperText={usernameError}
+								id="username-input"
+								autoFocus={true}
+								autoComplete={"username"}
 								required={true}
-								value={email}
-								onChange={(e) => setEmail(e.target.value)}
-								error={!!emailError}
+								value={username}
+								onChange={(e) => setUsername(e.target.value)}
+								error={!!usernameError}
 							/>
-						</FormControl>
+						)}
+						<TextField
+							label="Email"
+							variant="standard"
+							id="email-input"
+							autoComplete={"email"}
+							helperText={emailError}
+							type="email"
+							autoFocus={authMode !== "Sign up"}
+							required={true}
+							value={email}
+							onChange={(e) => setEmail(e.target.value)}
+							error={!!emailError}
+						/>
 						{authMode !== "Reset password" && (
-							<FormControl variant="standard">
-								<InputLabel
-									htmlFor="standard-adornment-password"
-									sx={{ zIndex: 2 }}
-								>
-									Password
-								</InputLabel>
-								<Input
-									id="standard-adornment-password"
-									autoComplete="current-password webauthn"
-									type={showPassword ? "text" : "password"}
-									required={true}
-									error={!!passwordError}
-									value={password}
-									onChange={(e) =>
-										setPassword(e.target.value)
-									}
-									endAdornment={
+							<TextField
+								label="Password"
+								variant="standard"
+								id="standard-adornment-password"
+								helperText={passwordError}
+								autoComplete="current-password webauthn"
+								type={showPassword ? "text" : "password"}
+								required={true}
+								error={!!passwordError}
+								value={password}
+								onChange={(e) => setPassword(e.target.value)}
+								InputProps={{
+									endAdornment: (
 										<InputAdornment position="end">
 											<IconButton
 												aria-label="toggle password visibility"
@@ -249,9 +244,9 @@ function AuthModal({ authMode, setAuthMode }: AuthProps) {
 												)}
 											</IconButton>
 										</InputAdornment>
-									}
-								/>
-							</FormControl>
+									),
+								}}
+							/>
 						)}
 						<LoadingButton
 							variant="primary"
@@ -260,16 +255,10 @@ function AuthModal({ authMode, setAuthMode }: AuthProps) {
 							loading={authPending}
 							onClick={
 								authMode === "Log in"
-									? () => {
-											handleLogin();
-									  }
+									? () => handleLogin()
 									: authMode === "Sign up"
-									? () => {
-											handleSignup();
-									  }
-									: () => {
-											handleSendPasswordResetEmail();
-									  }
+									? () => handleSignup()
+									: () => handleSendPasswordResetEmail()
 							}
 						/>
 						{authMode === "Log in" && (
@@ -312,6 +301,12 @@ function AuthModal({ authMode, setAuthMode }: AuthProps) {
 							</>
 						)}
 					</div>
+					<div
+						className={`success-overlay ${
+							showSuccessOverlay ? "success" : ""
+						}`}
+						ref={successOverlayRef}
+					></div>
 				</div>
 			</ClickAwayListener>
 		</StyledModal>
