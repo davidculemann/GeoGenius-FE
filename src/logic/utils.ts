@@ -25,3 +25,31 @@ export const formatMetricNumber = (
 		minimumFractionDigits: 2,
 	});
 };
+
+interface CountryData {
+	countryCode: string;
+	gdp?: string;
+	population?: string;
+	area?: string;
+	literacy?: string;
+	[key: string]: string | undefined;
+}
+
+export const IconsMapping: Partial<CountryData> = {
+	gdp: "fa-solid fa-sack-dollar",
+	population: "fas fa-people-group",
+	area: "fas fa-street-view",
+	literacy: "fas fa-book-reader",
+};
+
+type mode = "gdp" | "population" | "area" | "literacy";
+interface ModeIcons {
+	[key: string]: mode;
+}
+
+export const MapIconToMode: ModeIcons = {
+	"fa-solid fa-sack-dollar": "gdp",
+	"fas fa-people-group": "population",
+	"fas fa-street-view": "area",
+	"fas fa-book-reader": "literacy",
+};

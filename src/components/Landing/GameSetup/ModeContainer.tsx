@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { IconsMapping } from "../../../logic/utils";
+import { capitaliseModeName } from "../../../logic/utils";
 
 const StyledModeContainer = styled.div`
 	height: 12rem;
@@ -98,13 +100,13 @@ const StyledModeContainer = styled.div`
 `;
 
 interface ModeProps {
-	mode: { name: string; description: string; icon: string };
+	mode: { name: string; description: string };
 	setCustomiseMode: (mode: string) => void;
 	customiseMode: string;
 }
 
 function ModeContainer({ mode, setCustomiseMode, customiseMode }: ModeProps) {
-	const { name, description, icon } = mode;
+	const { name, description } = mode;
 	const navigate = useNavigate();
 
 	return (
@@ -114,11 +116,11 @@ function ModeContainer({ mode, setCustomiseMode, customiseMode }: ModeProps) {
 			onClick={() => navigate(`/play/${name.toLowerCase()}`)}
 		>
 			<div className="game-mode__icon">
-				<i className={`fas ${icon}`}></i>
+				<i className={IconsMapping[name]}></i>
 			</div>
 			<div className="game-mode__info">
 				<div className="name-container">
-					<h3>{name}</h3>
+					<h3>{capitaliseModeName(name)}</h3>
 					<div className="icon-container">
 						<i className="fa-solid fa-chevron-up fa-bounce"></i>
 					</div>

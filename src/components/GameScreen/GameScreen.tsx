@@ -13,6 +13,7 @@ import EndGameModal from "./EndGameModal";
 import React from "react";
 import lottie from "lottie-web";
 import Button from "../shared/Button";
+import { IconsMapping } from "../../logic/utils";
 
 interface CountryData {
 	countryCode: string;
@@ -22,13 +23,6 @@ interface CountryData {
 	literacy?: string;
 	[key: string]: string | undefined;
 }
-
-const IconsMapping: Partial<CountryData> = {
-	gdp: "fa-solid fa-money-bill",
-	population: "fas fa-people-group",
-	area: "fas fa-map-marked-alt",
-	literacy: "fas fa-book-reader",
-};
 
 function GameScreen() {
 	const { mode } = useParams();

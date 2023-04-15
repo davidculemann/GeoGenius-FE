@@ -32,25 +32,21 @@ const StyledSetupContainer = styled.div`
 
 const gameModes = [
 	{
-		name: "Population",
+		name: "population",
 		description: "Guess the country with the highest or lowest population",
-		icon: "fa-people-group",
 	},
 	{
-		name: "Area",
+		name: "area",
 		description: "Guess the country with the largest or smallest area",
-		icon: "fa-map-marked-alt",
 	},
 	{
-		name: "GDP",
+		name: "gdp",
 		description: "Guess the country with the highest or lowest GDP",
-		icon: "fa-money-bill",
 	},
 	{
-		name: "Literacy",
+		name: "literacy",
 		description:
 			"Guess the country with the highest or lowest literacy rate",
-		icon: "fa-book-reader",
 	},
 ];
 
