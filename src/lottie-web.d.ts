@@ -1,5 +1,6 @@
 declare namespace Lottie {
 	export interface AnimationItem {
+		[x: string]: any;
 		play();
 
 		stop();

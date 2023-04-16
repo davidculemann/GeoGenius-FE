@@ -19,6 +19,7 @@ const NavContainer = styled.nav`
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	gap: 1.6rem;
 	.logo {
 		display: flex;
 		letter-spacing: 0.1rem;
@@ -31,6 +32,17 @@ const NavContainer = styled.nav`
 		display: flex;
 		gap: 0.8rem;
 		align-items: center;
+		min-width: 0;
+		img {
+			width: 3.2rem;
+			height: 3.2rem;
+			border-radius: 0.4rem;
+			object-fit: cover;
+		}
+		.current-user {
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
 		@media (hover: none) and (pointer: coarse) {
 			font-size: 2.2rem;
 		}
@@ -54,6 +66,7 @@ export default function Header() {
 								displayName: user.displayName,
 								email: user.email,
 								uid: user.uid,
+								photoURL: user.photoURL,
 						  }
 						: null
 				)
@@ -81,6 +94,9 @@ export default function Header() {
 			<div className="auth-section">
 				{currentUser ? (
 					<>
+						{currentUser.photoURL && (
+							<img src={currentUser.photoURL} />
+						)}
 						<div className="current-user">
 							{currentUser.displayName}
 						</div>

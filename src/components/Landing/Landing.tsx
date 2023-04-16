@@ -1,6 +1,7 @@
 import DeletingText from "./DeletingText";
 import styled from "styled-components";
 import GameSetup from "./GameSetup/GameSetup";
+import Leaderboard from "./Leaderboard";
 
 const StyledLanding = styled.div`
 	display: flex;
@@ -9,9 +10,8 @@ const StyledLanding = styled.div`
 	width: 100%;
 	gap: 1.6rem;
 	.landing-content__container {
-		height: 100%;
 		display: grid;
-		grid-template-columns: 1fr min-content;
+		grid-template-columns: 5fr 3fr;
 		gap: 1.6rem;
 		@media (hover: none) and (pointer: coarse) {
 			grid-template-columns: 1fr;
@@ -27,7 +27,7 @@ function Landing() {
 			/>
 			<div className="landing-content__container">
 				<GameSetup />
-				{/* LeaderBoard component here */}
+				<Leaderboard />
 			</div>
 		</StyledLanding>
 	);

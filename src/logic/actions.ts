@@ -82,10 +82,12 @@ export async function postScore({
 	mode,
 	score,
 	uid,
+	customisation,
 }: {
 	mode: string;
 	score: number;
 	uid: string;
+	customisation: string | undefined;
 }) {
 	const response = await axios.post(
 		`${API_URL}/score`,
@@ -93,6 +95,7 @@ export async function postScore({
 			score,
 			mode,
 			uid,
+			customisation,
 		},
 		{
 			headers: {
@@ -104,13 +107,18 @@ export async function postScore({
 	return response.data;
 }
 
-export async function getLeaderboard({ mode }: { mode: string }) {
-	const response = await axios.get(`${API_URL}/leaderboard/${mode}`, {
-		headers: {
-			authorization: "Bearer " + (await auth.currentUser?.getIdToken()),
-		},
-	});
-	return response.data;
+export async function getLeaderboard({ mode }: { mode: string | null }) {
+	try {
+		const response = await axios.get(`${API_URL}/leaderboard/${mode}`, {
+			headers: {
+				authorization:
+					"Bearer " + (await auth.currentUser?.getIdToken()),
+			},
+		});
+		return response.data;
+	} catch (error: any) {
+		console.error(error);
+	}
 }
 
 export async function getUserScores(uid: string) {

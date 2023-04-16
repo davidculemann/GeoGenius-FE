@@ -1,5 +1,11 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { IconsMapping } from "../../../logic/utils";
+import { capitaliseModeName } from "../../../logic/utils";
+import { useEffect, useRef, useState } from "react";
+import lottie from "lottie-web";
+import StyledTooltip from "../../shared/StyledTooltip";
+import { useAppSelector } from "../../../logic/hooks";
 
 const StyledModeContainer = styled.div`
 	height: 12rem;
@@ -36,8 +42,11 @@ const StyledModeContainer = styled.div`
 				i {
 					display: flex;
 					align-items: center;
-					@media (hover: hover) and (pointer: fine) {
+					@media (hover: hover) {
 						opacity: 0;
+					}
+					@media (hover: none) {
+						animation: none;
 					}
 				}
 			}
@@ -46,51 +55,31 @@ const StyledModeContainer = styled.div`
 			font-size: 1.6rem;
 		}
 	}
-	.customise-button {
-		background-color: transparent;
-		border-radius: 1.6rem;
-		display: flex;
-		width: 3.2rem;
+	.time-trial-button {
+		height: 6rem;
+		width: 6rem;
+		padding: 0.8rem;
+		transition: opacity 0.2s ease-in-out;
 		margin-left: auto;
-		padding: 1.2rem;
-		cursor: pointer;
-		position: relative;
 		align-items: center;
-		@media (hover: hover) and (pointer: fine) {
+		border-radius: 50%;
+		flex-shrink: 0;
+		border: 0.1rem solid var(--light-border-color);
+		background-color: transparent;
+		transition: background-color 0.1s ease-in-out;
+		@media (hover: hover) {
 			opacity: 0;
-			transition: opacity 0.2s ease-in-out, width 0.2s ease-in-out,
-				background-color 0.2s ease-in-out;
-			&::before {
-				content: "Customise";
-				font-size: 1.6rem;
-				opacity: 0;
-				transition: opacity 0.2s ease-in-out;
-				position: absolute;
-				right: 0.8rem;
-			}
 			&:hover {
 				background-color: var(--dark-shade);
-				width: 12rem;
-				&::before {
-					opacity: 1;
-				}
-				i {
-					transition: transform 0.2s ease-in-out;
-					transform: rotate(-360deg);
-				}
+				border: 0.1rem solid var(--light-border-color-highlight);
 			}
-			&:not(:hover) i {
-				transform: rotate(360deg);
-			}
-			i {
-				transition: transform 0.3s ease-in-out;
-				margin-right: 0.8rem;
-				transform: rotate(0deg);
-			}
+		}
+		@media (hover: none) {
+			background-color: var(--dark-shade);
 		}
 	}
 	&:hover {
-		.customise-button {
+		.time-trial-button {
 			opacity: 1;
 		}
 		border-color: var(--light-border-color-highlight);
@@ -101,14 +90,29 @@ const StyledModeContainer = styled.div`
 `;
 
 interface ModeProps {
-	mode: { name: string; description: string; icon: string };
-	setCustomiseMode: (mode: string) => void;
-	customiseMode: string;
+	mode: { name: string; description: string };
+	index: number;
 }
 
-function ModeContainer({ mode, setCustomiseMode, customiseMode }: ModeProps) {
-	const { name, description, icon } = mode;
+function ModeContainer({ mode, index }: ModeProps) {
+	const { name, description } = mode;
+	const buttonRef = useRef<HTMLButtonElement>(null);
+	const animationRef = useRef<any>(null);
 	const navigate = useNavigate();
+	const isTouchDevice = useAppSelector((state) => state.isTouchDevice);
+	const [openTooltip, setOpenTooltip] = useState(false);
+
+	useEffect(() => {
+		animationRef.current = lottie.loadAnimation({
+			container: buttonRef.current as Element,
+			renderer: "svg",
+			loop: true,
+			autoplay: true,
+			path: "/animations/sand-timer.json",
+		});
+		animationRef.current.setSpeed(0.75);
+		return () => animationRef.current?.destroy();
+	}, []);
 
 	return (
 		<StyledModeContainer
@@ -117,26 +121,48 @@ function ModeContainer({ mode, setCustomiseMode, customiseMode }: ModeProps) {
 			onClick={() => navigate(`/play/${name.toLowerCase()}`)}
 		>
 			<div className="game-mode__icon">
-				<i className={`fas ${icon}`}></i>
+				<i className={IconsMapping[name]}></i>
 			</div>
 			<div className="game-mode__info">
 				<div className="name-container">
-					<h3>{name}</h3>
+					<h3>{capitaliseModeName(name)}</h3>
 					<div className="icon-container">
 						<i className="fa-solid fa-chevron-up fa-bounce"></i>
 					</div>
 				</div>
 				<p>{description}</p>
 			</div>
-			<button
-				className="customise-button"
-				onClick={(e) => {
-					e.stopPropagation();
-					setCustomiseMode(name);
+			<StyledTooltip
+				arrow
+				title={
+					<span>
+						<b>NEW</b> Time Trial
+					</span>
+				}
+				open={(isTouchDevice && index === 0) || openTooltip}
+				onMouseEnter={() => setOpenTooltip(true)}
+				onMouseLeave={() => setOpenTooltip(false)}
+				PopperProps={{
+					placement: "bottom",
+					modifiers: [
+						{
+							name: "offset",
+							options: {
+								offset: [0, -6],
+							},
+						},
+					],
 				}}
 			>
-				<i className="fas fa-cog"></i>
-			</button>
+				<button
+					ref={buttonRef}
+					className="time-trial-button"
+					onClick={(e) => {
+						e.stopPropagation();
+						navigate(`/play/${name.toLowerCase()}/timetrial`);
+					}}
+				></button>
+			</StyledTooltip>
 		</StyledModeContainer>
 	);
 }

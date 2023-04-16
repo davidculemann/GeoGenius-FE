@@ -1,15 +1,13 @@
 import styled from "styled-components";
 
 const StyledFooter = styled.footer`
-	position: absolute;
-	bottom: 0;
 	display: flex;
 	align-items: center;
-	justify-content: center;
 	gap: 1rem;
 	color: #000;
-	padding-bottom: 0.2rem;
+	padding: 1.6rem 0.8rem 0.8rem 0.8rem;
 	font-size: 1.4rem;
+	margin-top: auto;
 	a {
 		color: var(--primary-green);
 		text-decoration: none;
@@ -20,7 +18,6 @@ const StyledFooter = styled.footer`
 	}
 `;
 
-//footer with links to my gmail (davidculemann@gmail.com)
 function Footer() {
 	return (
 		<StyledFooter>

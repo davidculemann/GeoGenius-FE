@@ -10,6 +10,7 @@ export const getCountryName = (countryCode: string) => {
 
 export const capitaliseModeName = (modeName: string) => {
 	if (modeName === "gdp") return "GDP";
+	if (modeName === "timetrial") return "Time Trial";
 	return modeName[0].toUpperCase() + modeName.slice(1);
 };
 
@@ -24,6 +25,38 @@ export const formatMetricNumber = (
 		maximumFractionDigits: 2,
 		minimumFractionDigits: 2,
 	});
+};
+
+interface CountryData {
+	countryCode: string;
+	gdp?: string;
+	population?: string;
+	area?: string;
+	literacy?: string;
+
+	[key: string]: string | undefined;
+}
+
+export const IconsMapping: Partial<CountryData> = {
+	gdp: "fa-solid fa-sack-dollar",
+	population: "fas fa-people-group",
+	area: "fas fa-street-view",
+	literacy: "fas fa-book-reader",
+	timetrial: "fas fa-hourglass-half",
+};
+
+type mode = "gdp" | "population" | "area" | "literacy" | "timetrial";
+
+interface ModeIcons {
+	[key: string]: mode;
+}
+
+export const MapIconToMode: ModeIcons = {
+	"fa-solid fa-sack-dollar": "gdp",
+	"fas fa-people-group": "population",
+	"fas fa-street-view": "area",
+	"fas fa-book-reader": "literacy",
+	"fas fa-hourglass-half": "timetrial",
 };
 
 interface SetErrorProps {
