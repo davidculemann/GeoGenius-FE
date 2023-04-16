@@ -14,7 +14,10 @@ function App() {
 				<Header />
 				<Routes>
 					<Route path="/" element={<Landing />} />
-					<Route path="/play/:mode" element={<GameScreen />} />
+					<Route
+						path="/play/:mode/:customisation?"
+						element={<GameScreen />}
+					/>
 					<Route path="*" element={<PageNotFound />} />
 				</Routes>
 				<Footer />

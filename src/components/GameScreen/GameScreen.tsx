@@ -14,6 +14,8 @@ import React from "react";
 import lottie from "lottie-web";
 import Button from "../shared/Button";
 import { IconsMapping } from "../../logic/utils";
+import AnimatedGauge from "../shared/AnimatedGauge";
+import VotingControls from "./VotingControls";
 
 interface CountryData {
 	countryCode: string;
@@ -25,7 +27,8 @@ interface CountryData {
 }
 
 function GameScreen() {
-	const { mode } = useParams();
+	const { mode, customisation } = useParams();
+	const timeTrial = customisation === "time-trial";
 	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
 	const currentUser = useAppSelector((state) => state.currentUser);
@@ -67,18 +70,22 @@ function GameScreen() {
 				setComparingMetric(false);
 			}, 1250);
 		} else {
-			setTimeout(() => {
-				setShowModal(true);
-				if (currentUser?.uid)
-					postScore({
-						score,
-						mode: mode!,
-						uid: currentUser.uid,
-					}).then((res) => {
-						dispatch(setUserScores(res));
-					});
-			}, 2000);
+			handleEndgame(2000);
 		}
+	};
+
+	const handleEndgame = (interval: number) => {
+		setTimeout(() => {
+			setShowModal(true);
+			if (currentUser?.uid)
+				postScore({
+					score,
+					mode: mode!,
+					uid: currentUser.uid,
+				}).then((res) => {
+					dispatch(setUserScores(res));
+				});
+		}, interval);
 	};
 
 	const handleSetCountryData = async () => {
@@ -190,35 +197,17 @@ function GameScreen() {
 							metricName={mode}
 						/>
 					</div>
-					<div className="voting-controls">
-						<p>{getCountryName(rightCountryCode)} has a</p>
-						<div className="button-container">
-							<Button
-								label="Higher"
-								disabled={showModal || comparingMetric}
-								onClick={() => {
-									handleVote(true);
-								}}
-								variant="primary"
-								icon="fa-solid fa-circle-arrow-up"
-								className="voting-button"
-							/>
-							<Button
-								label="Lower"
-								disabled={showModal || comparingMetric}
-								variant="primary"
-								onClick={() => {
-									handleVote(false);
-								}}
-								icon="fa-solid fa-circle-arrow-down"
-								className="voting-button"
-							/>
-						</div>
-						<p>
-							{capitaliseModeName(mode)} than{" "}
-							{getCountryName(leftCountryCode)}
-						</p>
-					</div>
+					<VotingControls
+						comparingMetric={comparingMetric}
+						rightCountryCode={rightCountryCode}
+						leftCountryCode={leftCountryCode}
+						mode={mode}
+						showModal={showModal}
+						handleVote={handleVote}
+						handleEndgame={handleEndgame}
+						timeTrial={timeTrial}
+					/>
+
 					<div className="right-country">
 						<CountryContainer
 							countryCode={rightCountryCode}
