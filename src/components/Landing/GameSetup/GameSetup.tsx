@@ -51,19 +51,12 @@ const gameModes = [
 ];
 
 function GameSetup() {
-	const [customiseMode, setCustomiseMode] = useState("");
-
 	return (
 		<StyledSetupContainer>
 			<h2 className="left-container">Choose Game Mode</h2>
 			<div className="right-container">
 				{gameModes.map((mode) => (
-					<ModeContainer
-						key={mode.name}
-						mode={mode}
-						setCustomiseMode={setCustomiseMode}
-						customiseMode={customiseMode}
-					/>
+					<ModeContainer key={mode.name} mode={mode} />
 				))}
 			</div>
 		</StyledSetupContainer>

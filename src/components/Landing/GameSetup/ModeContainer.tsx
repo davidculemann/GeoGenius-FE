@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { IconsMapping } from "../../../logic/utils";
 import { capitaliseModeName } from "../../../logic/utils";
+import { useEffect, useRef } from "react";
 
 const StyledModeContainer = styled.div`
 	height: 12rem;
@@ -46,50 +47,15 @@ const StyledModeContainer = styled.div`
 			font-size: 1.6rem;
 		}
 	}
-	.customise-button {
-		background-color: transparent;
-		border-radius: 1.6rem;
-		display: flex;
-		width: 3.2rem;
+	.time-trial-button {
+		transition: opacity 0.2s ease-in-out;
 		margin-left: auto;
-		padding: 1.2rem;
-		cursor: pointer;
-		position: relative;
-		@media (hover: hover) and (pointer: fine) {
+		@media (hover: hover) {
 			opacity: 0;
-			transition: opacity 0.2s ease-in-out, width 0.2s ease-in-out,
-				background-color 0.2s ease-in-out;
-			&::before {
-				content: "Customise";
-				font-size: 1.6rem;
-				opacity: 0;
-				transition: opacity 0.2s ease-in-out;
-				position: absolute;
-				right: 0.8rem;
-			}
-			&:hover {
-				background-color: var(--dark-shade);
-				width: 12rem;
-				&::before {
-					opacity: 1;
-				}
-				i {
-					transition: transform 0.2s ease-in-out;
-					transform: rotate(-360deg);
-				}
-			}
-			&:not(:hover) i {
-				transform: rotate(360deg);
-			}
-			i {
-				transition: transform 0.3s ease-in-out;
-				margin-right: 0.8rem;
-				transform: rotate(0deg);
-			}
 		}
 	}
 	&:hover {
-		.customise-button {
+		.time-trial-button {
 			opacity: 1;
 		}
 		border-color: var(--light-border-color-highlight);
@@ -101,12 +67,11 @@ const StyledModeContainer = styled.div`
 
 interface ModeProps {
 	mode: { name: string; description: string };
-	setCustomiseMode: (mode: string) => void;
-	customiseMode: string;
 }
 
-function ModeContainer({ mode, setCustomiseMode, customiseMode }: ModeProps) {
+function ModeContainer({ mode }: ModeProps) {
 	const { name, description } = mode;
+	const buttonRef = useRef<HTMLButtonElement>(null);
 	const navigate = useNavigate();
 
 	return (
@@ -128,14 +93,13 @@ function ModeContainer({ mode, setCustomiseMode, customiseMode }: ModeProps) {
 				<p>{description}</p>
 			</div>
 			<button
-				className="customise-button"
+				ref={buttonRef}
+				className="time-trial-button"
 				onClick={(e) => {
 					e.stopPropagation();
-					setCustomiseMode(name);
+					navigate(`/play/${name.toLowerCase()}/time-trial`);
 				}}
-			>
-				<i className="fas fa-cog"></i>
-			</button>
+			></button>
 		</StyledModeContainer>
 	);
 }

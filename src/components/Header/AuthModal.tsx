@@ -138,7 +138,6 @@ function AuthModal({ authMode, setAuthMode }: AuthProps) {
 			password,
 			username,
 		});
-		console.log(res);
 		if ("code" in res) {
 			console.log(`Error ${res.code}: ${res.message}`);
 			handleSetError(res);
