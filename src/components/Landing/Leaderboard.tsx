@@ -59,18 +59,20 @@ const StyledTableContainer = styled.div`
 			padding: 0.8rem 1.6rem;
 			border-bottom: 0.1rem solid var(--light-border-color);
 			&.user-info {
-				display: flex;
-				align-items: center;
-				gap: 0.8rem;
-				img {
-					width: 3.2rem;
-					height: 3.2rem;
-					border-radius: 0.4rem;
-				}
-				.username {
-					overflow: hidden;
-					text-overflow: ellipsis;
-					white-space: nowrap;
+				> div {
+					display: flex;
+					align-items: center;
+					gap: 0.8rem;
+					img {
+						width: 3.2rem;
+						height: 3.2rem;
+						border-radius: 0.4rem;
+					}
+					.username {
+						overflow: hidden;
+						text-overflow: ellipsis;
+						white-space: nowrap;
+					}
 				}
 			}
 			&.score {
@@ -113,6 +115,7 @@ function Leaderboard() {
 				{Object.values(IconsMapping).map((icon) => {
 					return (
 						<ModeButton
+							key={icon}
 							mode={MapIconToMode[icon!]}
 							modeFilter={modeFilter}
 							handleSetModeFilter={handleSetModeFilter}
@@ -141,10 +144,12 @@ function Leaderboard() {
 									)}
 								</td>
 								<td className="user-info">
-									<img src={user.userPhoto} />
-									<span className="username">
-										{user.username}
-									</span>
+									<div>
+										<img src={user.userPhoto} />
+										<span className="username">
+											{user.username}
+										</span>
+									</div>
 								</td>
 								<td className="mode">
 									<ModeButton
