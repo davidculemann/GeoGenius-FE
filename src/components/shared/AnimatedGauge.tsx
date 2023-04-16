@@ -40,7 +40,6 @@ const AnimatedGauge = ({
 		if (!animationLoaded) return;
 		intervalId.current = setInterval(() => {
 			setTimeRemaining((prev) => {
-				console.log(prev);
 				if (prev === 0) {
 					clearInterval(intervalId.current!);
 					onTimeUp(500);

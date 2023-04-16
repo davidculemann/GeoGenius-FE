@@ -159,7 +159,7 @@ function ModeContainer({ mode, index }: ModeProps) {
 					className="time-trial-button"
 					onClick={(e) => {
 						e.stopPropagation();
-						navigate(`/play/${name.toLowerCase()}/time-trial`);
+						navigate(`/play/${name.toLowerCase()}/timetrial`);
 					}}
 				></button>
 			</StyledTooltip>

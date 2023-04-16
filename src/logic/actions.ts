@@ -82,10 +82,12 @@ export async function postScore({
 	mode,
 	score,
 	uid,
+	customisation,
 }: {
 	mode: string;
 	score: number;
 	uid: string;
+	customisation: string | undefined;
 }) {
 	const response = await axios.post(
 		`${API_URL}/score`,
@@ -93,6 +95,7 @@ export async function postScore({
 			score,
 			mode,
 			uid,
+			customisation,
 		},
 		{
 			headers: {

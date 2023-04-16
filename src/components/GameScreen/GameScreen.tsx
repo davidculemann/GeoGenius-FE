@@ -6,15 +6,13 @@ import IconButton from "../shared/IconButton";
 import { useNavigate } from "react-router-dom";
 import StyledTooltip from "../shared/StyledTooltip";
 import { useAppSelector } from "../../logic/hooks";
-import { capitaliseModeName, getCountryName } from "../../logic/utils";
+import { capitaliseModeName } from "../../logic/utils";
 import { useAppDispatch } from "../../logic/hooks";
 import { setUserScores } from "../../logic/reducer";
 import EndGameModal from "./EndGameModal";
 import React from "react";
 import lottie from "lottie-web";
-import Button from "../shared/Button";
 import { IconsMapping } from "../../logic/utils";
-import AnimatedGauge from "../shared/AnimatedGauge";
 import VotingControls from "./VotingControls";
 
 interface CountryData {
@@ -28,11 +26,15 @@ interface CountryData {
 
 function GameScreen() {
 	const { mode, customisation } = useParams();
-	const timeTrial = customisation === "time-trial";
+	const gameModes = [mode, customisation];
+	const timeTrial = customisation === "timetrial";
 	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
 	const currentUser = useAppSelector((state) => state.currentUser);
 	const userScores = useAppSelector((state) => state.userScores);
+	const customisationScores = customisation
+		? userScores?.customScores
+		: userScores?.scores;
 	const isTouchDevice = useAppSelector((state) => state.isTouchDevice);
 	const [countryData, setCountryData] = useState<CountryData[]>([]);
 	const [score, setScore] = useState<number>(0);
@@ -42,7 +44,7 @@ function GameScreen() {
 	const [loading, setLoading] = useState<boolean>(true);
 	const [comparingMetric, setComparingMetric] = useState<boolean>(false);
 	const [showModal, setShowModal] = useState<boolean>(false);
-	const modeHighScore = userScores?.[mode!] || 0;
+	const modeHighScore = customisationScores?.[mode!] || 0;
 	const loadingContainerRef = useRef<HTMLDivElement>(null);
 	const scoreContainerRef = useRef<HTMLDivElement>(null);
 	const animationRef = useRef<lottie.AnimationItem | null>(null);
@@ -84,6 +86,7 @@ function GameScreen() {
 					score,
 					mode: mode!,
 					uid: currentUser.uid,
+					customisation: customisation,
 				}).then((res) => {
 					dispatch(setUserScores(res));
 				});
@@ -138,7 +141,7 @@ function GameScreen() {
 	}, [loading]);
 
 	useEffect(() => {
-		if (isHighScore && userScores) {
+		if (isHighScore && customisationScores) {
 			animationRef.current = lottie.loadAnimation({
 				container: scoreContainerRef.current as Element,
 				renderer: "svg",
@@ -158,9 +161,17 @@ function GameScreen() {
 						<div className="categories-text">categories:</div>
 					)}
 					<div className="category-icon__container">
-						<TooltipCategoryIcon mode={mode} />
+						{gameModes.map(
+							(mode) =>
+								mode && (
+									<TooltipCategoryIcon
+										mode={mode}
+										key={mode}
+									/>
+								)
+						)}
 					</div>
-					{userScores && (
+					{customisationScores && (
 						<div className="high-score">
 							(high score: <b>{modeHighScore}</b>)
 						</div>
@@ -168,7 +179,7 @@ function GameScreen() {
 				</div>
 				<div className="score-tracker">
 					<StyledTooltip
-						open={userScores && isHighScore ? true : false}
+						open={customisationScores && isHighScore ? true : false}
 						title={isHighScore ? "New High Score! 🎉" : ""}
 					>
 						<div className="score-number">{score}</div>
