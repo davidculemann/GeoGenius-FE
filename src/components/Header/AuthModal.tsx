@@ -35,7 +35,7 @@ const StyledModal = styled.div`
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	z-index: 100;
+	z-index: 10000;
 	backdrop-filter: blur(1rem);
 	animation: ${blurIn} 0.2s linear;
 	.modal__content {
@@ -174,9 +174,14 @@ function AuthModal({ authMode, setAuthMode }: AuthProps) {
 
 	const handleSendPasswordResetEmail = async () => {
 		setAuthPending(true);
-		await passwordResetEmail(email);
-		setAuthPending(false);
-		setAuthMode("Log in");
+		try {
+			await passwordResetEmail(email);
+			setAuthPending(false);
+			setAuthMode("Log in");
+		} catch {
+			setEmailError("Email not found");
+			setAuthPending(false);
+		}
 	};
 
 	return (
@@ -281,21 +286,30 @@ function AuthModal({ authMode, setAuthMode }: AuthProps) {
 						{authMode === "Log in" ? (
 							<>
 								<span>Don't have an account?</span>
-								<button onClick={() => setAuthMode("Sign up")}>
+								<button
+									onClick={() => setAuthMode("Sign up")}
+									className="static"
+								>
 									Sign up
 								</button>
 							</>
 						) : authMode === "Log in" ? (
 							<>
 								<span>Already have an account?</span>
-								<button onClick={() => setAuthMode("Log in")}>
+								<button
+									onClick={() => setAuthMode("Log in")}
+									className="static"
+								>
 									Log in
 								</button>
 							</>
 						) : (
 							<>
 								<span>Remember your password?</span>
-								<button onClick={() => setAuthMode("Log in")}>
+								<button
+									onClick={() => setAuthMode("Log in")}
+									className="static"
+								>
 									Log in
 								</button>
 							</>
