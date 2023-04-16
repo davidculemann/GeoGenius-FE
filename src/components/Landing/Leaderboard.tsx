@@ -17,12 +17,21 @@ const StyledTableContainer = styled.div`
 	box-shadow: 0 0 0.4rem rgba(0, 0, 0, 0.2);
 	.filter-container {
 		display: flex;
+		align-items: center;
 		gap: 1.6rem;
 		border-radius: 1.6rem;
 		overflow: hidden;
 		background-color: var(--dark-shade);
 		width: fit-content;
 		padding: 0.8rem 1.6rem;
+		@media (hover: none) and (pointer: coarse) {
+			padding: 0 1.6rem;
+			gap: 2.4rem;
+			button i {
+				font-size: 2.2rem !important;
+			}
+		}
+
 		button {
 			&.selected,
 			:hover {

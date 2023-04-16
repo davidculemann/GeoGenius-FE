@@ -43,6 +43,9 @@ const NavContainer = styled.nav`
 			overflow: hidden;
 			text-overflow: ellipsis;
 		}
+		@media (hover: none) and (pointer: coarse) {
+			font-size: 2.2rem;
+		}
 	}
 `;
 

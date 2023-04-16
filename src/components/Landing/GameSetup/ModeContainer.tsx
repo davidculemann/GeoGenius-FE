@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { IconsMapping } from "../../../logic/utils";
 import { capitaliseModeName } from "../../../logic/utils";
 import { useEffect, useRef } from "react";
+import lottie from "lottie-web";
+import StyledTooltip from "../../shared/StyledTooltip";
 
 const StyledModeContainer = styled.div`
 	height: 12rem;
@@ -39,7 +41,9 @@ const StyledModeContainer = styled.div`
 				i {
 					display: flex;
 					align-items: center;
-					opacity: 0;
+					@media (hover: hover) and (pointer: fine) {
+						opacity: 0;
+					}
 				}
 			}
 		}
@@ -48,10 +52,22 @@ const StyledModeContainer = styled.div`
 		}
 	}
 	.time-trial-button {
+		height: 6rem;
+		width: 6rem;
+		padding: 0.8rem;
 		transition: opacity 0.2s ease-in-out;
 		margin-left: auto;
+		align-items: center;
+		border-radius: 50%;
+		flex-shrink: 0;
 		@media (hover: hover) {
 			opacity: 0;
+			&:hover {
+				background-color: var(--dark-shade);
+			}
+		}
+		@media (hover: none) {
+			background-color: var(--dark-shade);
 		}
 	}
 	&:hover {
@@ -72,7 +88,20 @@ interface ModeProps {
 function ModeContainer({ mode }: ModeProps) {
 	const { name, description } = mode;
 	const buttonRef = useRef<HTMLButtonElement>(null);
+	const animationRef = useRef<any>(null);
 	const navigate = useNavigate();
+
+	useEffect(() => {
+		animationRef.current = lottie.loadAnimation({
+			container: buttonRef.current as Element,
+			renderer: "svg",
+			loop: true,
+			autoplay: true,
+			path: "/animations/sand-timer.json",
+		});
+
+		return () => animationRef.current?.destroy();
+	}, []);
 
 	return (
 		<StyledModeContainer
@@ -92,14 +121,22 @@ function ModeContainer({ mode }: ModeProps) {
 				</div>
 				<p>{description}</p>
 			</div>
-			<button
-				ref={buttonRef}
-				className="time-trial-button"
-				onClick={(e) => {
-					e.stopPropagation();
-					navigate(`/play/${name.toLowerCase()}/time-trial`);
-				}}
-			></button>
+			<StyledTooltip
+				title={
+					<span>
+						<b>*NEW* </b>Time Trial
+					</span>
+				}
+			>
+				<button
+					ref={buttonRef}
+					className="time-trial-button"
+					onClick={(e) => {
+						e.stopPropagation();
+						navigate(`/play/${name.toLowerCase()}/time-trial`);
+					}}
+				></button>
+			</StyledTooltip>
 		</StyledModeContainer>
 	);
 }

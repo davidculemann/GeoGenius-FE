@@ -31,6 +31,13 @@ const StyledCountryContainer = styled.div`
 			height: 32rem;
 			width: 32rem;
 		}
+		@media (hover: none) and (pointer: coarse) {
+			padding: 1.6rem;
+			img {
+				height: 28rem;
+				width: 28rem;
+			}
+		}
 	}
 	.country-info-container {
 		display: flex;
@@ -38,9 +45,19 @@ const StyledCountryContainer = styled.div`
 		gap: 1.6rem;
 		font-size: 1.8rem;
 		width: 100%;
+
 		@media (hover: none) and (pointer: coarse) {
 			flex-direction: row;
 			align-items: baseline;
+			justify-content: center;
+			&.hidden {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				align-items: baseline;
+				.country-name {
+					margin-left: auto;
+				}
+			}
 		}
 		@media (hover: hover) and (pointer: fine) {
 			.metric-container:not(.hidden) {
@@ -89,7 +106,11 @@ function CountryContainer({
 					alt={`Map image of ${countryCode}`}
 				/>
 			</div>
-			<div className="country-info-container">
+			<div
+				className={`country-info-container ${
+					rightCountry ? "hidden" : ""
+				}`}
+			>
 				<div className="country-name">
 					{getFlagEmoji(countryCode)} {getCountryName(countryCode)}
 				</div>
