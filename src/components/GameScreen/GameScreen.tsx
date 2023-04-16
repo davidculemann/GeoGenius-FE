@@ -232,7 +232,10 @@ function GameScreen() {
 					</div>
 				</div>
 			)}
-			<div className="loading-container" ref={loadingContainerRef}></div>
+			<div
+				className={`loading-container ${loading ? "loading" : ""}`}
+				ref={loadingContainerRef}
+			></div>
 			{showModal && (
 				<EndGameModal
 					handleRestart={handleRestart}
