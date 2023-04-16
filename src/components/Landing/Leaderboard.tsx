@@ -142,7 +142,7 @@ function Leaderboard() {
 					</tr>
 				</thead>
 				<tbody>
-					{leaderBoard.map((user, index) => {
+					{leaderBoard?.map((user, index) => {
 						return (
 							<tr key={index}>
 								<td className="rank">
