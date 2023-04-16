@@ -5,7 +5,7 @@ const StyledFooter = styled.footer`
 	align-items: center;
 	gap: 1rem;
 	color: #000;
-	padding: 1rem;
+	padding: 1.6rem 0.8rem 0.8rem 0.8rem;
 	font-size: 1.4rem;
 	a {
 		color: var(--primary-green);
