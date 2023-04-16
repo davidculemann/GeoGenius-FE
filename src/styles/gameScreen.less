@@ -5,7 +5,8 @@
 	.game-header-bar {
 		display: flex;
 		border-bottom: 0.1rem solid var(--light-border-color);
-		align-items: baseline;
+		align-items: flex-end;
+		padding-bottom: 0.4rem;
 		@media (hover: none) and (pointer: coarse) {
 			button {
 				height: 4.4rem;
@@ -33,6 +34,10 @@
 		.game-header__left {
 			justify-content: flex-start;
 			gap: 0.8rem;
+			&.column {
+				display: flex;
+				flex-direction: column;
+			}
 			.category-icon__container {
 				display: flex;
 				gap: 1.6rem;

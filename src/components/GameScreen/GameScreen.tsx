@@ -156,27 +156,12 @@ function GameScreen() {
 	return (
 		<div className="game-screen">
 			<div className="game-header-bar">
-				<div className="game-header__left">
-					{!isTouchDevice && (
-						<div className="categories-text">categories:</div>
-					)}
-					<div className="category-icon__container">
-						{gameModes.map(
-							(mode) =>
-								mode && (
-									<TooltipCategoryIcon
-										mode={mode}
-										key={mode}
-									/>
-								)
-						)}
-					</div>
-					{customisationScores && (
-						<div className="high-score">
-							(high score: <b>{modeHighScore}</b>)
-						</div>
-					)}
-				</div>
+				<HeaderLeft
+					isTouchDevice={isTouchDevice}
+					customisationScores={customisationScores}
+					modeHighScore={modeHighScore}
+					gameModes={gameModes}
+				/>
 				<div className="score-tracker">
 					<StyledTooltip
 						open={customisationScores && isHighScore ? true : false}
@@ -274,5 +259,54 @@ function TooltipCategoryIcon({ mode }: { mode: string }) {
 		<StyledTooltip title={capitaliseModeName(mode)} arrow>
 			<i className={IconsMapping[mode]} />
 		</StyledTooltip>
+	);
+}
+
+interface HeaderLeftProps {
+	isTouchDevice: boolean;
+	gameModes: (string | undefined)[];
+	customisationScores: boolean;
+	modeHighScore: number;
+}
+
+function HeaderLeft({
+	isTouchDevice,
+	gameModes,
+	customisationScores,
+	modeHighScore,
+}: HeaderLeftProps) {
+	if (isTouchDevice)
+		return (
+			<div className="game-header__left column">
+				{customisationScores && (
+					<div className="high-score">
+						(high score: <b>{modeHighScore}</b>)
+					</div>
+				)}
+				<div className="category-icon__container">
+					{gameModes.map(
+						(mode) =>
+							mode && (
+								<TooltipCategoryIcon mode={mode} key={mode} />
+							)
+					)}
+				</div>
+			</div>
+		);
+	return (
+		<div className="game-header__left">
+			<div className="categories-text">categories:</div>
+			<div className="category-icon__container">
+				{gameModes.map(
+					(mode) =>
+						mode && <TooltipCategoryIcon mode={mode} key={mode} />
+				)}
+			</div>
+			{customisationScores && (
+				<div className="high-score">
+					(high score: <b>{modeHighScore}</b>)
+				</div>
+			)}
+		</div>
 	);
 }
