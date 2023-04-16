@@ -42,8 +42,11 @@ const StyledModeContainer = styled.div`
 				i {
 					display: flex;
 					align-items: center;
-					@media (hover: hover) and (pointer: fine) {
+					@media (hover: hover) {
 						opacity: 0;
+					}
+					@media (hover: none) {
+						animation: none;
 					}
 				}
 			}
