@@ -15,6 +15,10 @@
 	color: #fff;
 }
 
+html {
+	overflow-y: initial !important;
+}
+
 /* CSS Reset */
 *,
 *::before,
@@ -29,6 +33,7 @@
 
 body {
 	min-height: 100vh;
+	overflow: auto;
 	font-size: 1.6rem;
 	@media (hover: none) and (pointer: coarse) {
 		min-height: 100dvh;
@@ -78,8 +83,9 @@ button {
 
 /* APP */
 #root {
-	width: 100vw;
-	height: 100vh;
+	@media (hover: hover) and (pointer: fine) {
+		height: 100vh;
+	}
 	background: #3e5151; /* fallback for old browsers */
 	background: -webkit-linear-gradient(
 		to bottom,
@@ -101,7 +107,6 @@ button {
 	width: 100%;
 	padding: 0 2.4rem 0 2.4rem;
 	gap: 3.2rem;
-	overflow: auto;
 }
 
 @import "base.less";
