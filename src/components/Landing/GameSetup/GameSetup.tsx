@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import ModeContainer from "./ModeContainer";
-import { useState } from "react";
 
 const StyledSetupContainer = styled.div`
 	display: flex;
@@ -55,8 +54,8 @@ function GameSetup() {
 		<StyledSetupContainer>
 			<h2 className="left-container">Choose Game Mode</h2>
 			<div className="right-container">
-				{gameModes.map((mode) => (
-					<ModeContainer key={mode.name} mode={mode} />
+				{gameModes.map((mode, index) => (
+					<ModeContainer key={mode.name} mode={mode} index={index} />
 				))}
 			</div>
 		</StyledSetupContainer>

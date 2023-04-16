@@ -2,9 +2,10 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { IconsMapping } from "../../../logic/utils";
 import { capitaliseModeName } from "../../../logic/utils";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import lottie from "lottie-web";
 import StyledTooltip from "../../shared/StyledTooltip";
+import { useAppSelector } from "../../../logic/hooks";
 
 const StyledModeContainer = styled.div`
 	height: 12rem;
@@ -54,12 +55,14 @@ const StyledModeContainer = styled.div`
 	.time-trial-button {
 		height: 6rem;
 		width: 6rem;
-		padding: 0.8rem;
+		padding-bottom: 0.3rem;
 		transition: opacity 0.2s ease-in-out;
 		margin-left: auto;
 		align-items: center;
 		border-radius: 50%;
 		flex-shrink: 0;
+		background-color: transparent;
+		transition: background-color 0.1s ease-in-out;
 		@media (hover: hover) {
 			opacity: 0;
 			&:hover {
@@ -83,13 +86,16 @@ const StyledModeContainer = styled.div`
 
 interface ModeProps {
 	mode: { name: string; description: string };
+	index: number;
 }
 
-function ModeContainer({ mode }: ModeProps) {
+function ModeContainer({ mode, index }: ModeProps) {
 	const { name, description } = mode;
 	const buttonRef = useRef<HTMLButtonElement>(null);
 	const animationRef = useRef<any>(null);
 	const navigate = useNavigate();
+	const isTouchDevice = useAppSelector((state) => state.isTouchDevice);
+	const [openTooltip, setOpenTooltip] = useState(false);
 
 	useEffect(() => {
 		animationRef.current = lottie.loadAnimation({
@@ -97,9 +103,9 @@ function ModeContainer({ mode }: ModeProps) {
 			renderer: "svg",
 			loop: true,
 			autoplay: true,
-			path: "/animations/sand-timer.json",
+			path: "/animations/stop-clock.json",
 		});
-
+		animationRef.current.setSpeed(0.3);
 		return () => animationRef.current?.destroy();
 	}, []);
 
@@ -122,11 +128,26 @@ function ModeContainer({ mode }: ModeProps) {
 				<p>{description}</p>
 			</div>
 			<StyledTooltip
+				arrow
 				title={
 					<span>
-						<b>*NEW* </b>Time Trial
+						<b>NEW</b> Time Trial
 					</span>
 				}
+				open={(isTouchDevice && index === 0) || openTooltip}
+				onMouseEnter={() => setOpenTooltip(true)}
+				onMouseLeave={() => setOpenTooltip(false)}
+				PopperProps={{
+					placement: "bottom",
+					modifiers: [
+						{
+							name: "offset",
+							options: {
+								offset: [0, -6],
+							},
+						},
+					],
+				}}
 			>
 				<button
 					ref={buttonRef}
