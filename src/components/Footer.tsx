@@ -7,6 +7,7 @@ const StyledFooter = styled.footer`
 	color: #000;
 	padding: 1.6rem 0.8rem 0.8rem 0.8rem;
 	font-size: 1.4rem;
+	margin-top: auto;
 	a {
 		color: var(--primary-green);
 		text-decoration: none;

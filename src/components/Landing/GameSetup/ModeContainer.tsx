@@ -58,18 +58,20 @@ const StyledModeContainer = styled.div`
 	.time-trial-button {
 		height: 6rem;
 		width: 6rem;
-		padding-bottom: 0.3rem;
+		padding: 0.8rem;
 		transition: opacity 0.2s ease-in-out;
 		margin-left: auto;
 		align-items: center;
 		border-radius: 50%;
 		flex-shrink: 0;
+		border: 0.1rem solid var(--light-border-color);
 		background-color: transparent;
 		transition: background-color 0.1s ease-in-out;
 		@media (hover: hover) {
 			opacity: 0;
 			&:hover {
 				background-color: var(--dark-shade);
+				border: 0.1rem solid var(--light-border-color-highlight);
 			}
 		}
 		@media (hover: none) {
@@ -106,9 +108,9 @@ function ModeContainer({ mode, index }: ModeProps) {
 			renderer: "svg",
 			loop: true,
 			autoplay: true,
-			path: "/animations/stop-clock.json",
+			path: "/animations/sand-timer.json",
 		});
-		animationRef.current.setSpeed(0.3);
+		animationRef.current.setSpeed(0.75);
 		return () => animationRef.current?.destroy();
 	}, []);
 
