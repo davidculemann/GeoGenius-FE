@@ -104,10 +104,10 @@ function GameScreen() {
 			const countryData = await getCountryData(mode as string);
 			const shuffledRes = countryData.sort(() => Math.random() - 0.5);
 			setCountryData(shuffledRes);
+			setLoading(false);
 		} catch (err) {
 			console.error(err);
 		}
-		//setLoading(false);
 	};
 
 	const handleRestart = () => {
