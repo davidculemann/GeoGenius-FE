@@ -20,7 +20,7 @@ const ModalContainer = styled.div`
 	width: 100%;
 	height: 100%;
 	background-color: rgba(0, 0, 0, 0.1);
-	z-index: 100;
+	z-index: 10000;
 	backdrop-filter: blur(1rem);
 	display: flex;
 	flex-direction: column;

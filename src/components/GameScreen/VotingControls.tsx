@@ -12,6 +12,7 @@ interface VotingProps {
 	handleVote: (isHigher: boolean) => void;
 	handleEndgame: (interval: number) => void;
 	timeTrial: boolean;
+	score: number;
 }
 
 function VotingControls({
@@ -23,6 +24,7 @@ function VotingControls({
 	handleVote,
 	handleEndgame,
 	timeTrial,
+	score,
 }: VotingProps) {
 	const [timeRemaining, setTimeRemaining] = useState(30);
 
@@ -38,6 +40,7 @@ function VotingControls({
 						timeRemaining={timeRemaining}
 						setTimeRemaining={setTimeRemaining}
 						onTimeUp={handleEndgame}
+						score={score}
 					/>
 				</div>
 			)}

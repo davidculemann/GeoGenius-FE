@@ -10,7 +10,7 @@ import { capitaliseModeName } from "../../logic/utils";
 import { useAppDispatch } from "../../logic/hooks";
 import { setUserScores } from "../../logic/reducer";
 import EndGameModal from "./EndGameModal";
-import React from "react";
+import { useCallback } from "react";
 import lottie from "lottie-web";
 import { IconsMapping } from "../../logic/utils";
 import VotingControls from "./VotingControls";
@@ -50,6 +50,7 @@ function GameScreen() {
 	const animationRef = useRef<lottie.AnimationItem | null>(null);
 	const oldHighScore = useRef(modeHighScore);
 	const hasAuthChanged = useRef(false);
+	const gameOver = useRef(false);
 	const leftCountryCode = countryData?.[countryIndices[0]]?.countryCode;
 	const rightCountryCode = countryData?.[countryIndices[1]]?.countryCode;
 	const isHighScore = score > modeHighScore;
@@ -59,13 +60,11 @@ function GameScreen() {
 		setComparingMetric(true);
 		const isCorrect =
 			(isHigher &&
-				Number(countryData[countryIndices[0]][mode!]) <
+				Number(countryData[countryIndices[0]][mode!]) <=
 					Number(countryData[countryIndices[1]][mode!])) ||
 			(!isHigher &&
-				Number(countryData[countryIndices[0]][mode!]) >
-					Number(countryData[countryIndices[1]][mode!])) ||
-			Number(countryData[countryIndices[0]][mode!]) ===
-				Number(countryData[countryIndices[1]][mode!]);
+				Number(countryData[countryIndices[0]][mode!]) >=
+					Number(countryData[countryIndices[1]][mode!]));
 		if (isCorrect) {
 			setTimeout(() => {
 				setScore((prev) => prev + 1);
@@ -78,26 +77,25 @@ function GameScreen() {
 		}
 	};
 
-	const handleEndgame = (interval: number) => {
-		setTimeout(() => {
-			setShowModal(true);
-			if (currentUser?.uid && !hasAuthChanged.current)
-				postScore({
-					score,
-					mode: mode!,
-					uid: currentUser.uid,
-					customisation: customisation,
-				}).then((res) => {
-					dispatch(setUserScores(res));
-				});
-		}, interval);
-	};
-
-	useEffect(() => {
-		if (currentUser?.uid && score > 0) {
-			hasAuthChanged.current = true;
-		}
-	}, [currentUser]);
+	const handleEndgame = useCallback(
+		(interval: number) => {
+			if (gameOver.current) return;
+			gameOver.current = true;
+			setTimeout(() => {
+				setShowModal(true);
+				if (currentUser?.uid && !hasAuthChanged.current)
+					postScore({
+						score: score,
+						mode: mode!,
+						uid: currentUser.uid,
+						customisation: customisation,
+					}).then((res) => {
+						dispatch(setUserScores(res));
+					});
+			}, interval);
+		},
+		[score]
+	);
 
 	const handleSetCountryData = async () => {
 		try {
@@ -113,6 +111,7 @@ function GameScreen() {
 	const handleRestart = () => {
 		oldHighScore.current = modeHighScore;
 		hasAuthChanged.current = false;
+		gameOver.current = false;
 		setLoading(true);
 		setScore(0);
 		setScoreHidden(true);
@@ -120,6 +119,12 @@ function GameScreen() {
 		setComparingMetric(false);
 		if (mode) handleSetCountryData();
 	};
+
+	useEffect(() => {
+		if (currentUser?.uid && score > 0) {
+			hasAuthChanged.current = true;
+		}
+	}, [currentUser]);
 
 	useEffect(() => {
 		handleSetCountryData();
@@ -220,6 +225,7 @@ function GameScreen() {
 						handleVote={handleVote}
 						handleEndgame={handleEndgame}
 						timeTrial={timeTrial}
+						score={score}
 					/>
 
 					<div className="right-country">
@@ -252,7 +258,7 @@ function GameScreen() {
 	);
 }
 
-export default React.memo(GameScreen);
+export default GameScreen;
 
 function TooltipCategoryIcon({ mode }: { mode: string }) {
 	return (
