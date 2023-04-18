@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import lottie from "lottie-web";
 import { getLeaderboard } from "../../logic/actions";
 import styled from "styled-components";
 import {
@@ -31,7 +32,6 @@ const StyledTableContainer = styled.div`
 				font-size: 2.2rem !important;
 			}
 		}
-
 		button {
 			&.selected,
 			:hover {
@@ -93,6 +93,15 @@ const StyledTableContainer = styled.div`
 			}
 		}
 	}
+	.loading-container {
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		> div {
+			height: 20rem;
+		}
+	}
 `;
 
 interface Score {
@@ -105,6 +114,9 @@ interface Score {
 function Leaderboard() {
 	const [modeFilter, setModeFilter] = useState<string>("all");
 	const [leaderBoard, setLeaderBoard] = useState<Score[]>([]);
+	const loadingContainerRef = useRef<HTMLDivElement>(null);
+	const animationRef = useRef<lottie.AnimationItem | null>(null);
+	const [loading, setLoading] = useState<boolean>(true);
 
 	const handleSetModeFilter = (mode: string) => {
 		if (mode === modeFilter) setModeFilter("all");
@@ -112,10 +124,27 @@ function Leaderboard() {
 	};
 
 	useEffect(() => {
+		setLoading(true);
 		getLeaderboard({ mode: modeFilter }).then((res) => {
 			setLeaderBoard(res);
+			setLoading(false);
 		});
 	}, [modeFilter]);
+
+	useEffect(() => {
+		if (loading) {
+			animationRef.current = lottie.loadAnimation({
+				container: loadingContainerRef.current as Element,
+				renderer: "svg",
+				loop: true,
+				autoplay: true,
+				path: "/animations/loading-dots.json",
+			});
+		} else if (animationRef.current) {
+			animationRef.current?.destroy();
+		}
+		return () => animationRef.current?.destroy();
+	}, [loading]);
 
 	return (
 		<StyledTableContainer>
@@ -142,39 +171,45 @@ function Leaderboard() {
 					</tr>
 				</thead>
 				<tbody>
-					{leaderBoard?.map((user, index) => {
-						return (
-							<tr key={index}>
-								<td className="rank">
-									{index < 3 ? (
-										<LeaderBoardBadge rank={index + 1} />
-									) : (
-										index + 1
-									)}
-								</td>
-								<td className="user-info">
-									<div>
-										<img src={user.userPhoto} />
-										<span className="username">
-											{user.username}
-										</span>
-									</div>
-								</td>
-								<td className="mode">
-									<ModeButton
-										mode={user.mode}
-										modeFilter={modeFilter}
-										handleSetModeFilter={
-											handleSetModeFilter
-										}
-									/>
-								</td>
-								<td className="score">{user.score}</td>
-							</tr>
-						);
-					})}
+					{!loading &&
+						leaderBoard?.map((user, index) => {
+							return (
+								<tr key={index}>
+									<td className="rank">
+										{index < 3 ? (
+											<LeaderBoardBadge
+												rank={index + 1}
+											/>
+										) : (
+											index + 1
+										)}
+									</td>
+									<td className="user-info">
+										<div>
+											<img src={user.userPhoto} />
+											<span className="username">
+												{user.username}
+											</span>
+										</div>
+									</td>
+									<td className="mode">
+										<ModeButton
+											mode={user.mode}
+											modeFilter={modeFilter}
+											handleSetModeFilter={
+												handleSetModeFilter
+											}
+										/>
+									</td>
+									<td className="score">{user.score}</td>
+								</tr>
+							);
+						})}
 				</tbody>
 			</table>
+			<div className="loading-container">
+				<div ref={loadingContainerRef}></div>
+			</div>
 		</StyledTableContainer>
 	);
 }

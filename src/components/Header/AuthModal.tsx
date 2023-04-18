@@ -126,7 +126,7 @@ function AuthModal({ authMode, setAuthMode }: AuthProps) {
 				autoplay: true,
 				path: "/animations/thank-you.json",
 			});
-			animationRef.current.setSpeed(0.8);
+			animationRef.current.setSpeed(0.75);
 		} else if (animationRef.current) {
 			animationRef.current?.destroy();
 		}
@@ -150,7 +150,7 @@ function AuthModal({ authMode, setAuthMode }: AuthProps) {
 			});
 		} else {
 			setShowSuccessOverlay(true);
-			setTimeout(() => setAuthMode(""), 3000);
+			setTimeout(() => setAuthMode(""), 4000);
 		}
 		setAuthPending(false);
 	};
