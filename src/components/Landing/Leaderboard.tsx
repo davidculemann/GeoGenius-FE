@@ -9,6 +9,7 @@ import {
 } from "../../logic/utils";
 import LeaderBoardBadge from "../shared/LeaderBoardBadge";
 import StyledTooltip from "../shared/StyledTooltip";
+import { useAppSelector } from "../../logic/hooks";
 
 const StyledTableContainer = styled.div`
 	padding: 1.6rem;
@@ -64,6 +65,13 @@ const StyledTableContainer = styled.div`
 				text-align: right;
 			}
 		}
+		tr.your-score {
+			background-color: linear-gradient(
+				180deg,
+				rgba(255, 255, 255, 0.9) 0%,
+				rgba(255, 255, 255, 0) 100%
+			);
+		}
 		td {
 			padding: 0.8rem 1.6rem;
 			border-bottom: 0.1rem solid var(--light-border-color);
@@ -98,6 +106,9 @@ const StyledTableContainer = styled.div`
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		&:not(.loading) {
+			height: 0;
+		}
 		> div {
 			height: 20rem;
 		}
@@ -117,6 +128,7 @@ function Leaderboard() {
 	const loadingContainerRef = useRef<HTMLDivElement>(null);
 	const animationRef = useRef<lottie.AnimationItem | null>(null);
 	const [loading, setLoading] = useState<boolean>(true);
+	const currentUser = useAppSelector((state) => state.currentUser);
 
 	const handleSetModeFilter = (mode: string) => {
 		if (mode === modeFilter) setModeFilter("all");
@@ -174,7 +186,15 @@ function Leaderboard() {
 					{!loading &&
 						leaderBoard?.map((user, index) => {
 							return (
-								<tr key={index}>
+								<tr
+									key={index}
+									className={
+										user.username ===
+										currentUser?.displayName
+											? "your-score"
+											: ""
+									}
+								>
 									<td className="rank">
 										{index < 3 ? (
 											<LeaderBoardBadge
@@ -207,7 +227,7 @@ function Leaderboard() {
 						})}
 				</tbody>
 			</table>
-			<div className="loading-container">
+			<div className={`loading-container ${loading ? "loading" : ""}`}>
 				<div ref={loadingContainerRef}></div>
 			</div>
 		</StyledTableContainer>
