@@ -1,6 +1,6 @@
 # GeoGenius
 
-GeoGenius is a quiz website inspired by [higher-lower](http://www.higherlowergame.com/). The project is configured to use Firebase for user auth, and you can deploy the express API as a cloud function to Firebase [API](https://github.com/davidculemann/GeoGenius-BE).
+GeoGenius is a geography themed quiz website inspired by [higher-lower](http://www.higherlowergame.com/). The project is configured to use Firebase for user auth, and you can deploy the express API as a cloud function to Firebase [API](https://github.com/davidculemann/GeoGenius-BE).
 
 ## Installation
 
