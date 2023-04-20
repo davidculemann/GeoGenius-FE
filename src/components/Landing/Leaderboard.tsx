@@ -66,11 +66,7 @@ const StyledTableContainer = styled.div`
 			}
 		}
 		tr.your-score {
-			background-color: linear-gradient(
-				180deg,
-				rgba(255, 255, 255, 0.9) 0%,
-				rgba(255, 255, 255, 0) 100%
-			);
+			//todo: add styling here to distinguish your score
 		}
 		td {
 			padding: 0.8rem 1.6rem;
