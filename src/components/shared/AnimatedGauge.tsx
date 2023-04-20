@@ -23,15 +23,13 @@ const StyledGauge = styled.div`
 interface GaugeProps {
 	timeRemaining: number;
 	setTimeRemaining: React.Dispatch<React.SetStateAction<number>>;
-	onTimeUp: (interval: number) => void;
-	score: number;
+	onTimeUp: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const AnimatedGauge = ({
 	timeRemaining,
 	setTimeRemaining,
 	onTimeUp,
-	score,
 }: GaugeProps) => {
 	const gaugeRef = useRef<HTMLDivElement>(null);
 	const animationRef = useRef<lottie.AnimationItem | null>(null);
@@ -44,7 +42,7 @@ const AnimatedGauge = ({
 			setTimeRemaining((prev) => {
 				if (prev === 0) {
 					clearInterval(intervalId.current!);
-					onTimeUp(500);
+					onTimeUp(true);
 					return 0;
 				}
 				return prev - 1;
@@ -53,7 +51,7 @@ const AnimatedGauge = ({
 		return () => {
 			if (intervalId.current) clearInterval(intervalId.current);
 		};
-	}, [animationLoaded, score]);
+	}, [animationLoaded]);
 
 	useEffect(() => {
 		animationRef.current = lottie.loadAnimation({

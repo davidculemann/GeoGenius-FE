@@ -3,6 +3,9 @@ import { useEffect, useRef } from "react";
 import lottie from "lottie-web";
 import { useNavigate } from "react-router-dom";
 import Button from "../shared/Button";
+import { postScore } from "../../logic/actions";
+import { useAppDispatch, useAppSelector } from "../../logic/hooks";
+import { setUserScores } from "../../logic/reducer";
 
 interface EndGameModalProps {
 	handleRestart: () => void;
@@ -10,6 +13,8 @@ interface EndGameModalProps {
 	oldScore: number;
 	registeredUser: boolean;
 	authChanged: boolean;
+	mode: string;
+	customisation: string | undefined;
 }
 
 const ModalContainer = styled.div`
@@ -61,13 +66,26 @@ function EndGameModal({
 	oldScore,
 	registeredUser,
 	authChanged,
+	mode,
+	customisation,
 }: EndGameModalProps) {
 	const modalRef = useRef<HTMLDivElement>(null);
 	const animationRef = useRef<lottie.AnimationItem | null>(null);
 	const navigate = useNavigate();
 	const isHighScore = score > oldScore;
+	const dispatch = useAppDispatch();
+	const currentUser = useAppSelector((state) => state.currentUser);
 
 	useEffect(() => {
+		if (currentUser?.uid && !authChanged)
+			postScore({
+				score: score,
+				mode: mode!,
+				uid: currentUser.uid,
+				customisation: customisation,
+			}).then((res) => {
+				dispatch(setUserScores(res));
+			});
 		animationRef.current = lottie.loadAnimation({
 			container: modalRef.current as Element,
 			renderer: "svg",

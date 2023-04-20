@@ -1,16 +1,13 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
-import { getCountryData, postScore } from "../../logic/actions";
+import { getCountryData } from "../../logic/actions";
 import CountryContainer from "./CountryContainer";
 import IconButton from "../shared/IconButton";
 import { useNavigate } from "react-router-dom";
 import StyledTooltip from "../shared/StyledTooltip";
 import { useAppSelector } from "../../logic/hooks";
 import { capitaliseModeName } from "../../logic/utils";
-import { useAppDispatch } from "../../logic/hooks";
-import { setUserScores } from "../../logic/reducer";
 import EndGameModal from "./EndGameModal";
-import { useCallback } from "react";
 import lottie from "lottie-web";
 import { IconsMapping } from "../../logic/utils";
 import VotingControls from "./VotingControls";
@@ -28,7 +25,6 @@ function GameScreen() {
 	const { mode, customisation } = useParams();
 	const gameModes = [mode, customisation];
 	const timeTrial = customisation === "timetrial";
-	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
 	const currentUser = useAppSelector((state) => state.currentUser);
 	const userScores = useAppSelector((state) => state.userScores);
@@ -77,25 +73,13 @@ function GameScreen() {
 		}
 	};
 
-	const handleEndgame = useCallback(
-		(interval: number) => {
-			if (gameOver.current) return;
-			gameOver.current = true;
-			setTimeout(() => {
-				setShowModal(true);
-				if (currentUser?.uid && !hasAuthChanged.current)
-					postScore({
-						score: score,
-						mode: mode!,
-						uid: currentUser.uid,
-						customisation: customisation,
-					}).then((res) => {
-						dispatch(setUserScores(res));
-					});
-			}, interval);
-		},
-		[score]
-	);
+	const handleEndgame = (interval: number) => {
+		if (gameOver.current) return;
+		gameOver.current = true;
+		setTimeout(() => {
+			setShowModal(true);
+		}, interval);
+	};
 
 	const handleSetCountryData = async () => {
 		try {
@@ -223,9 +207,8 @@ function GameScreen() {
 						mode={mode}
 						showModal={showModal}
 						handleVote={handleVote}
-						handleEndgame={handleEndgame}
+						setShowModal={setShowModal}
 						timeTrial={timeTrial}
-						score={score}
 					/>
 
 					<div className="right-country">
@@ -252,6 +235,8 @@ function GameScreen() {
 					oldScore={oldHighScore.current || 0}
 					registeredUser={!!currentUser}
 					authChanged={hasAuthChanged.current}
+					mode={mode}
+					customisation={customisation}
 				/>
 			)}
 		</div>

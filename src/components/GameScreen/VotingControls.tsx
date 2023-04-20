@@ -10,9 +10,8 @@ interface VotingProps {
 	showModal: boolean;
 	comparingMetric: boolean;
 	handleVote: (isHigher: boolean) => void;
-	handleEndgame: (interval: number) => void;
+	setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
 	timeTrial: boolean;
-	score: number;
 }
 
 function VotingControls({
@@ -22,9 +21,8 @@ function VotingControls({
 	showModal,
 	comparingMetric,
 	handleVote,
-	handleEndgame,
 	timeTrial,
-	score,
+	setShowModal,
 }: VotingProps) {
 	const [timeRemaining, setTimeRemaining] = useState(30);
 
@@ -39,8 +37,7 @@ function VotingControls({
 					<AnimatedGauge
 						timeRemaining={timeRemaining}
 						setTimeRemaining={setTimeRemaining}
-						onTimeUp={handleEndgame}
-						score={score}
+						onTimeUp={setShowModal}
 					/>
 				</div>
 			)}
